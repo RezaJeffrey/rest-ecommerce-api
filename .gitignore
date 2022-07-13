@@ -108,9 +108,6 @@ settings.ini
 
 collectstatic/
 CACHE/
-**/migrations/**
-!**/migrations
-!**/migrations/__init__.py
 */__pycache__/*
 .vscode/*
 .idea/*
