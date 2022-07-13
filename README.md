@@ -1,2 +1,2 @@
-# Django Restful E-commerce
+# Django RESTful E-commerce
 ### TODO
