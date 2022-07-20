@@ -19,8 +19,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Third-party packages
     'rest_framework_simplejwt.token_blacklist',
+    'corsheaders',
     'rest_framework',
+    # local apps
     'users',
 ]
 
@@ -32,6 +35,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Third-party packages middleware
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -109,6 +114,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Important variables
 AUTH_USER_MODEL = 'users.User'
+CORS_ALLOW_ALL_ORIGINS = True
 
 # REST FRAMEWORK
 REST_FRAMEWORK = {
