@@ -1,7 +1,7 @@
 # Third-party package imports
 from rest_framework_simplejwt.views import TokenObtainPairView
 # .files import
-from .serializers import MyTokenObtainPairSerializer
+from users.api.v1.serializers import MyTokenObtainPairSerializer
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
