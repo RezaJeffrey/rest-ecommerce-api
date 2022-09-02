@@ -9,6 +9,7 @@ from users.api.v1.serializers import (MyTokenObtainPairSerializer, ChangePasswor
 # user
 User = get_user_model()
 
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 

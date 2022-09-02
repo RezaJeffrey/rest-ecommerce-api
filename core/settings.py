@@ -29,8 +29,10 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
     'rest_framework',
+    'mptt',
     # local apps
     'users',
+    'category',
 ]
 
 MIDDLEWARE = [
@@ -125,6 +127,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Important variables
 AUTH_USER_MODEL = 'users.User'
 CORS_ALLOW_ALL_ORIGINS = True
+
+# MEDIA
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
 
 # REST FRAMEWORK
 REST_FRAMEWORK = {
