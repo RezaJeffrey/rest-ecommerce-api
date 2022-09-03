@@ -6,3 +6,5 @@ app_name = 'categories:api:v1'
 urlpatterns = [
     #path('categories/', AllCategoriesListView.as_view(), name='categories'),
 ]
+
+
