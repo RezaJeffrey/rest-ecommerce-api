@@ -21,6 +21,7 @@ sdist/
 var/
 wheels/
 *.egg-info/
+media/
 .installed.cfg
 *.egg
 MANIFEST
