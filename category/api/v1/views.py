@@ -14,7 +14,7 @@ class AllCategoriesListView(ListAPIView):
         queryset = Category.objects.filter(parent=None).prefetch_related('child')
         return queryset
 
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(instance=queryset, many=True)
         response = {
