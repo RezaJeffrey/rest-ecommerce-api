@@ -64,7 +64,7 @@ class TestUser(APITestCase):
         """login with correct username and password"""
         username = self.username
         password = self.password
-        url = reverse_lazy('login')
+        url = reverse_lazy('v1:login')
         payload = {
             'username': username,
             'password': password
@@ -78,7 +78,7 @@ class TestUser(APITestCase):
         """login with incorrect username and password"""
         username = self.username
         password = "invalid_password"
-        url = reverse_lazy('login')
+        url = reverse_lazy('v1:login')
         payload = {
             'username': username,
             'password': password
@@ -91,7 +91,7 @@ class TestUser(APITestCase):
     def test_valid_refresh_token_validation_success(self):
         """check valid refresh token"""
         token = RefreshToken.for_user(self.user)
-        url = reverse_lazy("refresh")
+        url = reverse_lazy("v1:refresh")
         payload = {"refresh": str(token)}
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -101,7 +101,7 @@ class TestUser(APITestCase):
     def test_invalid_refresh_token_validation_failure(self):
         """check invalid refresh token"""
         token = "invalid_token"
-        url = reverse_lazy("refresh")
+        url = reverse_lazy("v1:refresh")
         payload = {"refresh": token}
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

@@ -120,3 +120,4 @@ jwt-key.pub
 .docker
 
 .celerybeat.pid
+!docs/github/.env
