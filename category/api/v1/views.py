@@ -14,7 +14,7 @@ class AllCategoriesListView(ListAPIView):
         queryset = Category.objects.all()
         return queryset
 
-    def list(self, request):
+    def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(instance=queryset, many=True)
         response = {
