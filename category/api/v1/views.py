@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
 from category.models import Category
 from rest_framework import status
-from .serializers import CategorySerializer, CategoryCreateSerializer
+from .serializers import CategorySerializer, CategoryCreateSerializer, CategorySearchSerializer
 from rest_framework.permissions import IsAdminUser
 
 
@@ -40,3 +40,12 @@ class CategoryCreateView(APIView):
             }
             code = status.HTTP_403_FORBIDDEN
         return Response(data=response, status=code)
+
+
+class SearchInCategory(ListAPIView):
+    serializer_class = CategorySearchSerializer
+
+    def get_queryset(self):
+        query = self.request.GET.get("search_query")
+        self.queryset = Category.objects.filter(name__icontains=query)
+        return self.queryset

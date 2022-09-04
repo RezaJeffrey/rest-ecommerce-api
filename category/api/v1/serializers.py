@@ -7,10 +7,11 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['name', 'image', 'child']
 
-    def get_fields(self):
-        fields = super(CategorySerializer, self).get_fields()
-        fields['child'] = CategorySerializer(many=True)
-        return fields
+
+class CategorySearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['name', 'image']
 
 
 class CategoryCreateSerializer(serializers.ModelSerializer):
