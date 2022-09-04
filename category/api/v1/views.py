@@ -9,19 +9,13 @@ from rest_framework.permissions import IsAdminUser
 
 class AllCategoriesListView(ListAPIView):
     serializer_class = CategorySerializer
-
-    def get_queryset(self):
-        queryset = Category.objects.filter(parent=None).prefetch_related('child')
-        return queryset
+    queryset = Category.objects.filter(parent=None).prefetch_related('child')
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.serializer_class(instance=queryset, many=True)
-        response = {
-            'list': serializer.data
-        }
         code = status.HTTP_200_OK
-        return Response(data=response, status=code)
+        return Response(serializer.data, status=code)
 
 
 class CategoryCreateView(APIView):
