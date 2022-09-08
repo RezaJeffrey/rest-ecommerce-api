@@ -1,6 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
+from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 from category.models import Category
 from rest_framework import status
 from .serializers import CategorySerializer, CategoryCreateSerializer, CategorySearchSerializer
@@ -8,8 +10,17 @@ from rest_framework.permissions import IsAdminUser
 
 
 class AllCategoriesListView(ListAPIView):
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
     serializer_class = CategorySerializer
-    queryset = Category.objects.filter(parent=None).prefetch_related('child')
+
+    def get_queryset(self, *args, **kwargs):
+        keywords = self.request.query_params.get('search')
+        if keywords:
+            queryset = Category.objects.filter(name__icontains=keywords)
+        else:
+            queryset = Category.objects.filter(parent=None).prefetch_related('child')
+        return queryset
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -41,11 +52,3 @@ class CategoryCreateView(APIView):
             code = status.HTTP_403_FORBIDDEN
         return Response(data=response, status=code)
 
-
-class SearchInCategory(ListAPIView):
-    serializer_class = CategorySearchSerializer
-
-    def get_queryset(self):
-        query = self.request.GET.get("search_query")
-        self.queryset = Category.objects.filter(name__icontains=query)
-        return self.queryset
