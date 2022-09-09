@@ -1,13 +1,39 @@
 from django.db import models
 from category.models import Category
+from django.contrib.auth import get_user_model
 import secrets
 
+User = get_user_model()
 
-class ProductPack(models.Model):
+
+class DateTime(models.Model):
+    created_time = models.DateTimeField(auto_now_add=True)
+    updated_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Shop(DateTime):
+    name = models.CharField(max_length=255)
+    province = models.CharField(max_length=120)  # TODO choicefields for province
+    # TODO address model
+    # address = models.ForeignKey(Address, on_delete=models.CASCADE)
+
+
+class ProductPack(DateTime):
     pass
 
 
-class Product(models.Model):
+class Brand(DateTime):
+    name = models.CharField(max_length=120)
+    image = models.ImageField(upload_to='images/brand')
+
+    def __str__(self):
+        return self.name
+
+
+class Product(DateTime):
     name = models.CharField(
         max_length=255,
         blank=False,
@@ -20,12 +46,8 @@ class Product(models.Model):
         blank=True,
         null=True
     )
-    # brand = models.ForeignKey()
+    brand = models.ForeignKey(Brand, related_name='products', on_delete=models.CASCADE)
     # shop = models.ForeignKey()
-    image = models.ImageField(
-        upload_to='images/products'
-    )
-    # comment = models.ManyToOneRel()
     sku = models.CharField(
         max_length=255,
         blank=False,
@@ -37,11 +59,17 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.sku:
-            self.sku = secrets.token_urlsafe(bytes=12)
+            self.sku = secrets.token_urlsafe(nbytes=12)
         super(Product, self).save(*args, **kwargs)
 
 
+class ProductImage(DateTime):
+    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='images/products')
+    alt_text = models.CharField(max_length=255)
 
 
-
-
+class Commment(DateTime):
+    # TODO like/reply model
+    user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
+    text = models.TextField(max_length=1200)
