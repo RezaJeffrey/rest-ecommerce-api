@@ -1,3 +1,10 @@
 from django.contrib import admin
+from products import models
 
-# Register your models here.
+
+admin.site.register(models.Shop)
+admin.site.register(models.Brand)
+admin.site.register(models.Product)
+admin.site.register(models.ProductImage)
+admin.site.register(models.Commment)
+
