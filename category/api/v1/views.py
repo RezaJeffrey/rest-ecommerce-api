@@ -9,62 +9,6 @@ from .serializers import CategorySerializer, CategoryCreateSerializer
 from rest_framework.permissions import IsAdminUser
 
 
-class AllCategoriesListView(ListAPIView):
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['name']
-    serializer_class = CategorySerializer
-
-    def get_queryset(self, *args, **kwargs):
-        keywords = self.request.query_params.get('search')
-        if keywords:
-            queryset = Category.objects.filter(name__icontains=keywords)
-        else:
-            queryset = Category.objects.filter(parent=None).prefetch_related('child')
-        return queryset
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.serializer_class(instance=queryset, many=True)
-        code = status.HTTP_200_OK
-        return Response(serializer.data, status=code)
-
-
-'''
-class CategoryView(viewsets.ViewSet):
-    def get_permissions(self):
-        if not self.action == 'list':
-            permission_classes = [IsAdminUser]
-        else:
-            permission_classes = []
-        return [permission() for permission in permission_classes]
-
-    def create(self, request):
-        payload = request.data
-        serializer = CategoryCreateSerializer(data=payload)
-        if serializer.is_valid():
-            validated_data = serializer.validated_data
-            serializer.create(**validated_data)
-            response = {
-                'message': 'new category created!',
-                'category data': validated_data
-            }
-            code = status.HTTP_201_CREATED
-        else:
-            response = {
-                'errors': serializer.errors
-            }
-            code = status.HTTP_400_BAD_REQUEST
-        return Response(
-            data=response,
-            status=code
-        )
-
-    def retrieve(self, request, pk=None):
-        queryset = get_object_or_404(Category, pk=pk)
-
-'''
-
-
 class CategoryViewSet(viewsets.ModelViewSet):
     """
     A simple ViewSet for viewing and editing categories.
@@ -105,29 +49,3 @@ class CategoryViewSet(viewsets.ModelViewSet):
             data=serializer.data,
             status=status.HTTP_200_OK
         )
-
-
-'''
-class CategoryCreateView(APIView):
-    serializer_class = CategoryCreateSerializer
-    permission_classes = [IsAdminUser]
-
-    def post(self, request):
-        payload = request.data
-        serializer = self.serializer_class(data=payload)
-        if serializer.is_valid():
-            validated_data = serializer.validated_data
-            serializer.create(**validated_data)
-            response = {
-                'message': 'new category created',
-                'category data': validated_data
-            }
-            code = status.HTTP_201_CREATED
-
-        else:
-            response = {
-                'errors': serializer.errors
-            }
-            code = status.HTTP_403_FORBIDDEN
-        return Response(data=response, status=code)
-'''
