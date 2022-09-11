@@ -18,5 +18,5 @@ class CategoryCreateSerializer(serializers.ModelSerializer):
         model = Category
         fields = ['name', 'image', 'parent']
 
-    def create(self, **validated_data):
+    def create(self, validated_data):
         return Category.objects.create(**validated_data)
