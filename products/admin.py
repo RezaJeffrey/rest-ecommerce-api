@@ -6,5 +6,5 @@ admin.site.register(models.Shop)
 admin.site.register(models.Brand)
 admin.site.register(models.Product)
 admin.site.register(models.ProductImage)
-admin.site.register(models.Commment)
+admin.site.register(models.Comment)
 

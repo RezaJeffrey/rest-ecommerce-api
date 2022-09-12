@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'mptt',
     'django_filters',
+    'eav',
     # local apps
     'users',
     'category',
