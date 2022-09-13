@@ -15,14 +15,22 @@ class DateTimeMixin(models.Model):
         abstract = True
 
 
+class ShopAddress(DateTimeMixin):
+    address = models.CharField(max_length=500)
+    postal_code = models.PositiveBigIntegerField(blank=True, null=True)  # TODO postal code iran format(max, min length)
+
+    def __str__(self):
+        return self.address[:35]
+
+
 class Shop(DateTimeMixin):
     name = models.CharField(max_length=255)
     province = models.CharField(max_length=120)  # TODO choicefields for province
-    # TODO address model
-    # address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    address = models.OneToOneField(ShopAddress, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         return self.name
+
 
 # class ProductPack(DateTimeMixin):
 #     pass
@@ -77,3 +85,23 @@ class Comment(DateTimeMixin):
     user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
     text = models.TextField(max_length=1200)
     product = models.ForeignKey(Product, related_name='comments', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.text[:35]
+
+
+class ReplyComment(DateTimeMixin):
+    user = models.ForeignKey(User, related_name='comment_replies', on_delete=models.CASCADE)
+    text = models.CharField(max_length=1200)
+    comment = models.ForeignKey(Comment, related_name='replies', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.text[:30]}...    from user  < {self.user.username}>    replied to    {self.comment.text[:35]}..."
+
+
+class LikeComment(DateTimeMixin):
+    user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
+    to_comment = models.ForeignKey(Comment, related_name='likes', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.username}     -->    {self.to_comment.text[:35]}..."
