@@ -81,7 +81,6 @@ class ProductImage(DateTimeMixin):
 
 
 class Comment(DateTimeMixin):
-    # TODO like/reply model
     user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
     text = models.TextField(max_length=1200)
     product = models.ForeignKey(Product, related_name='comments', on_delete=models.CASCADE)
