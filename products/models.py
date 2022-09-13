@@ -79,7 +79,7 @@ class ProductImage(DateTimeMixin):
     alt_text = models.CharField(max_length=255, blank=True, null=True)
 
 
-class Commment(DateTimeMixin):
+class Comment(DateTimeMixin):
     user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
     text = models.TextField(max_length=1200)
     product = models.ForeignKey(Product, related_name='comments', on_delete=models.CASCADE)
