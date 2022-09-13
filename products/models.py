@@ -91,7 +91,7 @@ class Comment(DateTimeMixin):
 class ReplyComment(DateTimeMixin):
     user = models.ForeignKey(User, related_name='comment_replies', on_delete=models.CASCADE)
     text = models.CharField(max_length=1200)
-    comment = models.ForeignKey(Commment, related_name='replies', on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, related_name='replies', on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.text[:30]}...    from user  < {self.user.username}>    replied to    {self.comment.text[:35]}..."
@@ -99,7 +99,7 @@ class ReplyComment(DateTimeMixin):
 
 class LikeComment(DateTimeMixin):
     user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
-    to_comment = models.ForeignKey(Commment, related_name='likes', on_delete=models.CASCADE)
+    to_comment = models.ForeignKey(Comment, related_name='likes', on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.user.username}     -->    {self.to_comment.text[:35]}..."
