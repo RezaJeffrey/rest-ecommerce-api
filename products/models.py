@@ -74,6 +74,15 @@ class Product(DateTimeMixin):
         super(Product, self).save(*args, **kwargs)
 
 
+@register_eav()
+class ProductPack(DateTimeMixin):
+    product = models.ForeignKey(
+        Product,
+        related_name='paks',
+        on_delete=models.CASCADE
+    )
+
+
 class ProductImage(DateTimeMixin):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='images/products')

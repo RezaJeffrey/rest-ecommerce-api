@@ -18,7 +18,7 @@ class AddFieldProductPack(APIView):
             response = {
                 'added_fields': self.lst
             }
-            code = status.HTTP_201_CREATE
+            code = status.HTTP_201_CREATED
         else:
             response = {
                 'error': serializer.errors,

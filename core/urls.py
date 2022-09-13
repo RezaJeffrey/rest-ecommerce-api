@@ -8,7 +8,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/api/v1/', include('users.api.v1.urls', namespace='v1')),
     path('categories/api/v1/', include('category.api.v1.urls', namespace='v1')),
+    path('products/api/v1/', include('products.api.v1.urls', namespace='v1')),
 ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
                           document_root=settings.MEDIA_ROOT)
