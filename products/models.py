@@ -72,15 +72,6 @@ class ProductImage(DateTimeMixin):
     alt_text = models.CharField(max_length=255, blank=True, null=True)
 
 
-@register_eav()
-class ProductPack(DateTimeMixin):
-    product = models.ForeignKey(
-        Product,
-        related_name='paks',
-        on_delete=models.CASCADE
-    )
-
-
 class Comment(DateTimeMixin):
     # TODO like/reply model
     user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
