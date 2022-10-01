@@ -1,7 +1,6 @@
 from django.db import models
 from category.models import Category
 from django.contrib.auth import get_user_model
-from eav.decorators import register_eav
 import secrets
 
 User = get_user_model()
@@ -30,10 +29,6 @@ class Shop(DateTimeMixin):
 
     def __str__(self):
         return self.name
-
-
-# class ProductPack(DateTimeMixin):
-#     pass
 
 
 class Brand(DateTimeMixin):
@@ -74,42 +69,41 @@ class Product(DateTimeMixin):
         super(Product, self).save(*args, **kwargs)
 
 
-@register_eav()
-class ProductPack(DateTimeMixin):
-    product = models.ForeignKey(
-        Product,
-        related_name='paks',
-        on_delete=models.CASCADE
-    )
-
-
 class ProductImage(DateTimeMixin):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='images/products')
     alt_text = models.CharField(max_length=255, blank=True, null=True)
 
 
-class Comment(DateTimeMixin):
-    user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
-    text = models.TextField(max_length=1200)
-    product = models.ForeignKey(Product, related_name='comments', on_delete=models.CASCADE)
+class ExtraFieldName(DateTimeMixin):
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+        unique=True
+    )
 
     def __str__(self):
-        return self.text[:35]
+        return self.name
 
 
-class ReplyComment(DateTimeMixin):
-    user = models.ForeignKey(User, related_name='comment_replies', on_delete=models.CASCADE)
-    text = models.CharField(max_length=1200)
-    comment = models.ForeignKey(Comment, related_name='replies', on_delete=models.CASCADE)
+class ExtraFieldValue(DateTimeMixin):
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        blank=False,
+        related_name='extra_fields'
+    )
+    field_name = models.ForeignKey(
+        ExtraFieldName,
+        on_delete=models.CASCADE,
+        blank=False
+    )
+    value = models.CharField(
+        max_length=255,
+        blank=False,
+    )
 
     def __str__(self):
-        return f"{self.text[:30]}...    from user  < {self.user.username}>    replied to    {self.comment.text[:35]}..."
+        return f'{self.field_name}={self.value}'
 
 
-class LikeComment(DateTimeMixin):
-    user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
-    to_comment = models.ForeignKey(Comment, related_name='likes', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.user.username}     -->    {self.to_comment.text[:35]}..."

@@ -1,62 +1,40 @@
-from abc import ABC
-
-from products.models import Product, ProductPack
-from rest_framework import serializers
-from eav.models import Attribute
+from products.models import Product, ExtraFieldName, ExtraFieldValue
+from category.models import Category
 from category.api.v1.serializers import CategorySerializer
+from rest_framework import serializers
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer(many=False)
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.filter(child=None)
+    )
 
     class Meta:
         model = Product
         fields = [
             'name', 'category',
-            'brand', 'shop',
-            'description'
+            'description', 'brand',
+            'shop'
         ]
 
-    def create(self, validated_data):
-        Product.objects.create(**validated_data)
 
-
-class AddFieldSerializer(serializers.Serializer):
-    choices = [
-        ('TYPE_INT', 'integer'),
-        ('TYPE_FLOAT', 'float'),
-        ('TYPE_TEXT', 'text'),
-        ('TYPE_DATE', 'date'),
-        ('TYPE_BOOLEAN', 'boolean'),
-        ('TYPE_OBJECT', 'object'),
-        ('TYPE_ENUM', 'enum'),
-        ('TYPE_JSON', 'json'),
-        ('TYPE_CSV', 'csv')
-    ]
-    optional_field_name = serializers.CharField(
-        max_length=255,
-        allow_blank=False
-    )
-    optional_field_datatype = serializers.ChoiceField(
-        choices=choices,
-        allow_blank=False
-    )
-
-    def create_attribute(self, optional_name, optional_datatype):
-        return Attribute.objects.create(
-            name=optional_name,
-            datatype=optional_datatype
-        )
-
-
-class ProductPackSerializer(serializers.ModelSerializer):
+class ExtraFieldNameSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ProductPack
-        fields = [
-            'product'
-        ]
-
-    def create(self, validated_data):
-        return ProductPack.objects.create(**validated_data)
+        model = ExtraFieldName
+        fields = ['name']
 
 
+class ExtraFieldSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ExtraFieldValue
+        fields = ['field_name', 'value']
+
+    def create(self, product_sku, **validated_data):
+        product = Product.objects.get(
+            sku=product_sku
+        )
+        field_value = ExtraFieldValue.objects.create(
+            product=product,
+            **validated_data
+        )
+        return field_value
