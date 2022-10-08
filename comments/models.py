@@ -1,30 +1,49 @@
 from django.db import models
-from products.models import DateTimeMixin
+from datetimemixin.models import DateTimeMixin
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from likes.models import Like
+from django.contrib.auth import get_user_model
+import secrets
 
-'''
+User = get_user_model()
+
+
 class Comment(DateTimeMixin):
-    user = models.ForeignKey(User, related_name='comments', on_delete=models.CASCADE)
-    text = models.TextField(max_length=1200)
-    product = models.ForeignKey(Product, related_name='comments', on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        blank=False
+    )
+    reply_comment = models.ForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        blank=True,
+        related_name='replies'
+    )
+    text = models.TextField(
+        blank=False
+    )
+    object_id = models.PositiveIntegerField()
+    content_type = models.ForeignKey(
+        ContentType,
+        on_delete=models.CASCADE
+    )
+    content_object = GenericForeignKey('content_type', 'object_id')
+    likes = GenericRelation(Like, related_query_name='likes')
+    sku = models.CharField(
+        max_length=255,
+        blank=False,
+        unique=True
+    )
 
-    def __str__(self):
-        return self.text[:35]
+    class Meta:
+        indexes = [
+            models.Index(fields=["content_type", "object_id"])
+        ]
+        unique_together = ('user', 'object_id')
 
-
-class ReplyComment(DateTimeMixin):
-    user = models.ForeignKey(User, related_name='comment_replies', on_delete=models.CASCADE)
-    text = models.CharField(max_length=1200)
-    comment = models.ForeignKey(Comment, related_name='replies', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.text[:30]}...    from user  < {self.user.username}>    replied to    {self.comment.text[:35]}..."
-
-
-class LikeComment(DateTimeMixin):
-    user = models.ForeignKey(User, related_name='likes', on_delete=models.CASCADE)
-    to_comment = models.ForeignKey(Comment, related_name='likes', on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"{self.user.username}     -->    {self.to_comment.text[:35]}..."
-
-'''
+    def save(self, *args, **kwargs):
+        if not self.sku:
+            self.sku = secrets.token_urlsafe(nbytes=12)
+        return super(Comment, self).save(*args, **kwargs)

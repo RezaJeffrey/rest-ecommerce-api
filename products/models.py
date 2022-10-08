@@ -4,6 +4,7 @@ from category.models import Category
 from datetimemixin.models import DateTimeMixin
 from django.contrib.auth import get_user_model
 from likes.models import Like
+from comments.models import Comment
 import secrets
 
 User = get_user_model()
@@ -55,6 +56,7 @@ class Product(DateTimeMixin):
         unique=True
     )
     likes = GenericRelation(Like, related_query_name='likes')
+    comments = GenericRelation(Comment, related_query_name='comments')
 
     def __str__(self):
         return self.name
