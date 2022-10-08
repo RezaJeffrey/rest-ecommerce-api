@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     # Third-party packages
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
@@ -36,6 +37,7 @@ INSTALLED_APPS = [
     'users',
     'category',
     'products',
+    'likes',
 ]
 
 MIDDLEWARE = [

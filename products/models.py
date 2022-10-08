@@ -1,17 +1,12 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericRelation
 from category.models import Category
+from datetimemixin.models import DateTimeMixin
 from django.contrib.auth import get_user_model
+from likes.models import Like
 import secrets
 
 User = get_user_model()
-
-
-class DateTimeMixin(models.Model):
-    created_time = models.DateTimeField(auto_now_add=True)
-    updated_time = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True
 
 
 class ShopAddress(DateTimeMixin):
@@ -59,6 +54,7 @@ class Product(DateTimeMixin):
         blank=True,
         unique=True
     )
+    likes = GenericRelation(Like, related_query_name='likes')
 
     def __str__(self):
         return self.name

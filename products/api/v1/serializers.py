@@ -1,21 +1,7 @@
 from products.models import Product, ExtraFieldName, ExtraFieldValue
 from category.models import Category
-from category.api.v1.serializers import CategorySerializer
 from rest_framework import serializers
-
-
-class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.filter(child=None)
-    )
-
-    class Meta:
-        model = Product
-        fields = [
-            'name', 'category',
-            'description', 'brand',
-            'shop'
-        ]
+from likes.api.v1.serializer import LikeSerializer
 
 
 class ExtraFieldNameSerializer(serializers.ModelSerializer):
@@ -25,9 +11,17 @@ class ExtraFieldNameSerializer(serializers.ModelSerializer):
 
 
 class ExtraFieldSerializer(serializers.ModelSerializer):
+    field_name = serializers.PrimaryKeyRelatedField(
+        queryset=ExtraFieldName.objects.all()
+    )
+    product = serializers.PrimaryKeyRelatedField(
+        many=False,
+        read_only=True,
+    )
+
     class Meta:
         model = ExtraFieldValue
-        fields = ['field_name', 'value']
+        fields = ['field_name', 'value', 'product']
 
     def create(self, product_sku, **validated_data):
         product = Product.objects.get(
@@ -38,3 +32,33 @@ class ExtraFieldSerializer(serializers.ModelSerializer):
             **validated_data
         )
         return field_value
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    category = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.filter(child=None)
+    )
+    extra_fields = ExtraFieldSerializer(many=True)
+    likes = LikeSerializer(many=True)
+
+    class Meta:
+        model = Product
+        fields = [
+            'name', 'category',
+            'description', 'brand',
+            'shop', 'extra_fields',
+            'likes'
+        ]
+
+
+class ProductCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = [
+            'name', 'category',
+            'description', 'brand',
+            'shop',
+        ]
+
+    def create(self, validated_data):
+        return Product.objects.create(**validated_data)
