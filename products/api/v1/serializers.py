@@ -2,6 +2,7 @@ from products.models import Product, ExtraFieldName, ExtraFieldValue
 from category.models import Category
 from rest_framework import serializers
 from likes.api.v1.serializer import LikeSerializer
+from comments.api.v1.serializer import CommentSerializer
 
 
 class ExtraFieldNameSerializer(serializers.ModelSerializer):
@@ -40,6 +41,7 @@ class ProductSerializer(serializers.ModelSerializer):
     )
     extra_fields = ExtraFieldSerializer(many=True)
     likes = LikeSerializer(many=True)
+    comments = CommentSerializer(many=True)
 
     class Meta:
         model = Product
@@ -47,7 +49,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'name', 'category',
             'description', 'brand',
             'shop', 'extra_fields',
-            'likes'
+            'likes', 'comments'
         ]
 
 

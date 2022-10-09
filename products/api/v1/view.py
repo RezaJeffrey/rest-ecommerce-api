@@ -2,7 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 from .serializers import ProductSerializer, ProductCreateSerializer, ExtraFieldSerializer
 from rest_framework import permissions
 from products.models import Product, ExtraFieldValue
-from rest_framework.decorators import action
+from comments.api.v1.serializer import CreateCommentSerializer, CommentSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -80,7 +80,7 @@ class ExtraFieldViewSet(ModelViewSet):
         )
 
 
-class LikeProduct(APIView):
+class AddLikeProduct(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, product_pk, product_sku):
@@ -95,6 +95,41 @@ class LikeProduct(APIView):
             'message': 'liked'
         }
         code = status.HTTP_201_CREATED
+        return Response(
+            data=response,
+            status=code
+        )
+
+
+class AddCommentProduct(APIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CreateCommentSerializer
+
+    def post(self, request, product_pk, product_sku):
+        payload = request.data
+        current_user = request.user
+        product = Product.objects.get(
+            pk=product_pk,
+            sku=product_sku
+        )
+        serializer = self.serializer_class(
+            data=payload,
+        )
+        if serializer.is_valid():
+            product.comments.create(
+                user=current_user,
+                **serializer.validated_data
+            )
+            response = {
+                'message': 'your comment placed successfully!',
+                'comment': serializer.data
+            }
+            code = status.HTTP_201_CREATED
+        else:
+            response = {
+                'errors': serializer.errors
+            }
+            code = status.HTTP_403_FORBIDDEN
         return Response(
             data=response,
             status=code

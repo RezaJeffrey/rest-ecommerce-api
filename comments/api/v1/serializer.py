@@ -12,18 +12,28 @@ class CommentSerializer(serializers.ModelSerializer):
             'user', 'text',
             'created_time',
             'reply_comment',
-            'likes'
+            'likes', 'replies'
         ]
 
     def get_fields(self):
         fields = super(CommentSerializer, self).get_fields()
-        fields['reply_comment'] = CommentSerializer(many=True)
+        fields['reply_comment'] = CommentSerializer(many=False)
         return fields
 
 
 class CreateCommentSerializer(serializers.ModelSerializer):
-    pass
+    class Meta:
+        model = Comment
+        fields = [
+            'reply_comment',
+            'text'
+        ]
 
+    def create(self, user, **validated_data):
+        return Comment.objects.create(
+            user=user,
+            **validated_data
+        )
 
 
 

@@ -19,6 +19,7 @@ class Comment(DateTimeMixin):
         'self',
         on_delete=models.CASCADE,
         blank=True,
+        null=True,
         related_name='replies'
     )
     text = models.TextField(
@@ -41,9 +42,11 @@ class Comment(DateTimeMixin):
         indexes = [
             models.Index(fields=["content_type", "object_id"])
         ]
-        unique_together = ('user', 'object_id')
 
     def save(self, *args, **kwargs):
         if not self.sku:
             self.sku = secrets.token_urlsafe(nbytes=12)
         return super(Comment, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.content_object}, {self.user}, {self.text}"
