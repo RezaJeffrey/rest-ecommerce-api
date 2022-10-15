@@ -94,12 +94,16 @@ class ExtraFieldValue(DateTimeMixin):
     field_name = models.ForeignKey(
         ExtraFieldName,
         on_delete=models.CASCADE,
-        blank=False
+        blank=False,
+        related_name="values"
     )
     value = models.CharField(
         max_length=255,
         blank=False,
     )
+
+    class Meta:
+        unique_together = ("field_name", "value",)
 
     def __str__(self):
         return f'{self.field_name}={self.value}'

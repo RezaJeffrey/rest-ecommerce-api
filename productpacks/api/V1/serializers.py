@@ -1,15 +1,16 @@
 from rest_framework import serializers
 from productpacks.models import ProductPack
-from products.models import ExtraFields
+from products.api.v1.serializers import ProductSerializer, ExtraFieldSerializer
 
 
 class ProductPackSerializer(serializers.ModelSerializer):
-    field = ExtraFields(many=False)
+    product = ProductSerializer(many=False)
+    extra_field_value = ExtraFieldSerializer(many=False)
 
     class Meta:
         model = ProductPack
         fields = [
-            'field', 'value'
+            'product', 'extra_field_value'
         ]
 
 

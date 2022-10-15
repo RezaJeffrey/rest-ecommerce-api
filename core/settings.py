@@ -15,6 +15,8 @@ SECRET_KEY = env.str('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG')
 
+SITE_ID = 1
+
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -38,7 +40,8 @@ INSTALLED_APPS = [
     'category',
     'products',
     'likes',
-    'comments'
+    'comments',
+    'carts'
 ]
 
 MIDDLEWARE = [

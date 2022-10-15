@@ -100,7 +100,6 @@ class AddLikeProduct(APIView):
             status=code
         )
 
-
 class AddCommentProduct(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = CreateCommentSerializer
