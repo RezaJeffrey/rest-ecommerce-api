@@ -43,9 +43,17 @@ class CategoryViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['GET'])
     def search(self, request, *args, **kwargs):
         params = self.request.query_params.get('search')
+        if params is None:
+            return Response(
+                {'error': "search param can't be None"},
+                status=status.HTTP_204_NO_CONTENT
+            )
         queryset = Category.objects.filter(name__icontains=params)
         serializer = self.get_serializer(instance=queryset, many=True)
         return Response(
             data=serializer.data,
             status=status.HTTP_200_OK
         )
+
+
+
