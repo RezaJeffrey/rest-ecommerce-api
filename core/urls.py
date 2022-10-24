@@ -9,7 +9,8 @@ urlpatterns = [
     path('users/api/v1/', include('users.api.v1.urls', namespace='v1')),
     path('categories/api/v1/', include('category.api.v1.urls', namespace='v1')),
     path('products/api/v1/', include('products.api.v1.urls', namespace='v1')),
-    path('comments/api/v1/', include('comments.api.v1.urls', namespace='v1'))
+    path('comments/api/v1/', include('comments.api.v1.urls', namespace='v1')),
+    path('packs/api/v1/', include('productpacks.api.V1.urls', namespace='V1'))
 ]
 
 if settings.DEBUG:

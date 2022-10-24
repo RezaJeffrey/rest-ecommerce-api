@@ -1,4 +1,4 @@
-from products.models import Product, ExtraFieldName, ExtraFieldValue
+from products.models import ExtraFieldValue, Product
 from datetimemixin.models import DateTimeMixin
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -14,9 +14,8 @@ class ProductPack(DateTimeMixin):
         related_name="paks",
         blank=False
     )
-    extra_field_value = models.ForeignKey(
-        ExtraFieldName,
-        on_delete=models.CASCADE,
+    extra_field_values = models.ManyToManyField(
+        ExtraFieldValue,
         related_name="paks",
         blank=False
     )

@@ -1,17 +1,31 @@
 from rest_framework import serializers
 from productpacks.models import ProductPack
-from products.api.v1.serializers import ProductSerializer, ExtraFieldSerializer
+from products.models import ExtraFieldValue, Product
 
 
 class ProductPackSerializer(serializers.ModelSerializer):
-    product = ProductSerializer(many=False)
-    extra_field_value = ExtraFieldSerializer(many=False)
-
     class Meta:
         model = ProductPack
         fields = [
-            'product', 'extra_field_value'
+            'product', 'extra_field_values',
         ]
 
+    def get_fields(self):
+        product = Product.objects.get(
+            sku=self.context['product_sku']
+        )
+        self.fields['extra_field_values'] = serializers.PrimaryKeyRelatedField(
+            queryset=ExtraFieldValue.objects.filter(
+                product=product
+            ),
+        )
+
+    def create(self, **validated_data):
+        values = validated_data.pop('extra_field_values')
+        product_pack = ProductPack.objects.create(
+            **validated_data
+        )
+        product_pack.extra_field_values.add(*values)
+        return product_pack
 
 
