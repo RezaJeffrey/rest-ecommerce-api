@@ -101,7 +101,10 @@ venv.bak/
 
 # mkdocs documentation
 
+#media
+media/images/
 media/upload/
+
 # mypy
 .mypy_cache/
 settings.ini

@@ -13,7 +13,7 @@ class TestCategory(APITestCase):
         cls.category = Category.objects.create(
             name="categoryNameTest",
             parent=cls.parent  # pycharm unresolved error(test is runing well I have no Idea:))
-        )  # TODO ask mehran for static files test
+        )  # TODO search for static files test
 
     def test_category_model_name_success(self):
         self.assertEqual(self.category.name, "categoryNameTest")
