@@ -10,6 +10,9 @@ class CreatePack(APIView):
     def get(self, request, product_sku=None):
         context = self.get_serializer_context()
         context.update({"product_sku": product_sku})
+        serializer = self.serializer_class(
+            context=context
+        )
         return Response()
 
     def post(self, request):
