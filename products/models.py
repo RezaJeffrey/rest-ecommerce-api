@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from likes.models import Like
 from comments.models import Comment
 import secrets
+
 User = get_user_model()
 
 
@@ -100,7 +101,6 @@ class ProductInventory(DateTimeMixin):
     attribute_values = models.ManyToManyField(
         ExtraFieldValue,
         related_name="products",
-        on_delete=models.CASCADE
     )
     store_price = models.DecimalField(max_digits=10, decimal_places=2)
     sale_price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -112,6 +112,17 @@ class ProductInventory(DateTimeMixin):
         if not self.sku:
             self.sku = secrets.token_urlsafe(nbytes=12)
         super(ProductInventory, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.product.name
+
+
+class ProductIventoryValue(DateTimeMixin):
+    product = models.ForeignKey(ProductInventory, on_delete=models.CASCADE)
+    extra_field_valye = models.ForeignKey(ExtraFieldValue, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (('product', 'extra_field_valye'),)
 
 
 class ProductImage(DateTimeMixin):

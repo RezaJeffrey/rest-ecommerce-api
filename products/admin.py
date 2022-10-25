@@ -4,10 +4,10 @@ from products import models
 admin.site.register(models.Shop)
 admin.site.register(models.Brand)
 admin.site.register(models.ShopAddress)
+admin.site.register(models.Product)
+admin.site.register(models.ExtraFieldName)
 
 
-# admin.site.register(models.Product)
-# admin.site.register(models.ProductImage)
 # admin.site.register(models.Comment)
 # admin.site.register(models.ExtraFieldName)
 # admin.site.register(models.ExtraFieldValue)
@@ -18,22 +18,22 @@ class ProductImageInline(admin.TabularInline):
     model = models.ProductImage
 
 
-class ValueInLine(admin.TabularInline):
-    model = models.ExtraFieldValue
+class ProductInLine(admin.TabularInline):
+    model = models.ProductIventoryValue
 
 
 class ExtraFieldAdmin(admin.ModelAdmin):
     inlines = [
-        ValueInLine,
+        ProductInLine,
     ]
 
 
-class ProductAdmin(admin.ModelAdmin):
+class ExtraFieldValueAdmin(admin.ModelAdmin):
     inlines = [
-        ProductImageInline,
-        ValueInLine
+        # ProductImageInline,
+        ProductInLine,
     ]
 
 
-admin.site.register(models.ExtraFieldName, ExtraFieldAdmin)
-admin.site.register(models.Product, ProductAdmin)
+admin.site.register(models.ExtraFieldValue, ExtraFieldAdmin)
+admin.site.register(models.ProductInventory, ExtraFieldValueAdmin)
