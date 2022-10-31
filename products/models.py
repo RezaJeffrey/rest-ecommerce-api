@@ -101,9 +101,19 @@ class ExtraFieldValue(DateTimeMixin):
         max_length=255,
         blank=False,
     )
+    sku = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True
+    )
 
     class Meta:
         unique_together = ("field_name", "value",)
+
+    def save(self, *args, **kwargs):
+        if not self.sku:
+            self.sku = secrets.token_urlsafe(nbytes=12)
+        return super(ExtraFieldValue, self).save(*args, **kwargs)
 
     def __str__(self):
         return f'{self.field_name}={self.value}'

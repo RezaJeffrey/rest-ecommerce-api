@@ -1,3 +1,5 @@
 from django.contrib import admin
+from productpacks.models import ProductPack
 
-# Register your models here.
+
+admin.site.register(ProductPack)

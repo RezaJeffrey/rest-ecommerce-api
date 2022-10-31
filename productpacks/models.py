@@ -17,21 +17,22 @@ class ProductPack(DateTimeMixin):
     extra_field_values = models.ManyToManyField(
         ExtraFieldValue,
         related_name="paks",
-        blank=False
+        blank=True,
+        null=True
     )
     sku = models.CharField(
         max_length=255,
-        blank=False,
+        blank=True,
         unique=True
     )
 
     def save(self, *args, **kwargs):
         if not self.sku:
             self.sku = secrets.token_urlsafe(nbytes=12)
-        return super(self, ProductPack).save(*args, **kwargs)
+        return super(ProductPack, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.product
+        return self.product.name
 
 
 
