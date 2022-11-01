@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView
 from .serializers import (
     ProductPackCreateSerializer,
     ValueListSerializer,
@@ -78,3 +78,7 @@ class ValueList(ListAPIView):
             data=response,
             status=code
         )
+
+
+class UpdateValue(UpdateAPIView):
+    pass

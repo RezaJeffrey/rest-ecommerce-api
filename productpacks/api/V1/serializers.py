@@ -36,7 +36,17 @@ class AddValueToPackSerializer(serializers.ModelSerializer):
         if product_for_pack != product_for_value:
             message = 'the value you want to add is referencing to an other product!'
             raise serializers.ValidationError(message)
+        else:
+            pack_values = product_pack.extra_field_values.all()
+            for pack_value in pack_values:
+                if pack_value.field_name == value.field_name:
+                    message = 'a value with this field name already exist!'
+                    raise serializers.ValidationError(message)
+                    break
+                else:
+                    continue
         return attrs
+
 
     def create(self, product_pack_sku, value_sku):
         product_pack = ProductPack.objects.get(
@@ -55,3 +65,6 @@ class ValueListSerializer(serializers.ModelSerializer):
             'field_name', 'value'
         ]
 
+
+class UpdateValueSerializer(serializers.ModelSerializer):
+    pass
