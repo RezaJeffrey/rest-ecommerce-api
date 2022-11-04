@@ -3,11 +3,13 @@ from rest_framework.generics import ListAPIView, CreateAPIView, UpdateAPIView
 from .serializers import (
     ProductPackCreateSerializer,
     ValueListSerializer,
-    AddValueToPackSerializer
+    AddValueToPackSerializer,
+    UpdateValueSerializer
 )
 from rest_framework.response import Response
 from rest_framework import status
 from products.models import Product
+from productpacks.models import ProductPack
 
 
 class CreatePack(APIView):
@@ -81,4 +83,41 @@ class ValueList(ListAPIView):
 
 
 class UpdateValue(UpdateAPIView):
-    pass
+    serializer_class = UpdateValueSerializer
+
+    def get_object(self, product_pack_sku=None):
+        obj = ProductPack.objects.get(
+            sku=product_pack_sku
+        )
+        return obj
+
+    def update(self, request, product_pack_sku=None, value_sku=None, *args, **kwargs):
+        instance = self.get_object(
+            product_pack_sku=product_pack_sku
+        )
+        context = {
+            'product_pack_sku': product_pack_sku,
+            'value_sku': value_sku
+        }
+        serializer = self.serializer_class(
+            instance=instance,
+            data=request.data,
+            context=context
+        )
+        if serializer.is_valid(raise_exception=True):
+            serializer.update()
+            response = {
+                'message': 'value updated successfully!',
+                'data': serializer.data
+            }
+            code = status.HTTP_201_CREATED
+        else:
+            response = {
+                'errors': serializer.errors
+            }
+            code = status.HTTP_403_FORBIDDEN
+        return Response(
+            data=response,
+            status=code
+        )
+

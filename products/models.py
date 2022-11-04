@@ -108,7 +108,7 @@ class ExtraFieldValue(DateTimeMixin):
     )
 
     class Meta:
-        unique_together = ("field_name", "value",)
+        unique_together = ('product', "field_name", "value",)
 
     def save(self, *args, **kwargs):
         if not self.sku:
