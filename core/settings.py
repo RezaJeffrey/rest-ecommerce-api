@@ -34,7 +34,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'mptt',
     'django_filters',
-    'eav',
     # local apps
     'users',
     'category',
@@ -42,7 +41,8 @@ INSTALLED_APPS = [
     'likes',
     'comments',
     'carts',
-    'productpacks'
+    'productpacks',
+    'extra_fields',
 ]
 
 MIDDLEWARE = [
@@ -80,7 +80,6 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',

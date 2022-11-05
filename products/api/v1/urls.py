@@ -1,7 +1,8 @@
-from .view import (
-    ProductViewSet, ExtraFieldViewSet,
+from products.api.v1.view import (
+    ProductViewSet,
     AddLikeProduct, AddCommentProduct
 )
+from extra_fields.api.V1.view import ExtraFieldViewSet
 from rest_framework.routers import DefaultRouter
 from django.urls import path
 

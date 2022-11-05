@@ -3,7 +3,8 @@ import secrets
 from django.db import models
 from datetimemixin.models import DateTimeMixin
 from django.contrib.auth import get_user_model
-from products.models import Product, ExtraFieldName, ExtraFieldValue
+from products.models import Product
+from extra_fields.models import ExtraFieldValue, ExtraFieldName
 
 User = get_user_model()
 

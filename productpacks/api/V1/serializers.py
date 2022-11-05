@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from products.models import ExtraFieldValue, Product
+from products.models import Product
+from extra_fields.models import ExtraFieldValue
 from productpacks.models import ProductPack
 
 

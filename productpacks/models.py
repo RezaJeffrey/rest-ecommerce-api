@@ -1,4 +1,5 @@
-from products.models import ExtraFieldValue, Product
+from products.models import Product
+from extra_fields.models import ExtraFieldValue
 from datetimemixin.models import DateTimeMixin
 from django.db import models
 from django.contrib.auth import get_user_model
