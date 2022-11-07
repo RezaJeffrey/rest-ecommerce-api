@@ -64,7 +64,11 @@ class ShopSerializer(serializers.ModelSerializer):
 
 
 class AttrValuesSerializer(serializers.ModelSerializer):
-    pass
+    class Meta:
+        model = ExtraFieldValue
+        fields = [
+            'value', "field_name"
+        ]
 
 
 class ProductSerializer(serializers.ModelSerializer):
