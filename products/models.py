@@ -35,31 +35,6 @@ class Brand(DateTimeMixin):
         return self.name
 
 
-class Product(DateTimeMixin):
-    name = models.CharField(
-        max_length=255,
-        blank=False,
-    )
-    category = models.ForeignKey(
-        Category,
-        on_delete=models.CASCADE
-    )
-
-    sku = models.CharField(
-        max_length=255,
-        blank=True,
-        unique=True
-    )
-
-    def __str__(self):
-        return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.sku:
-            self.sku = secrets.token_urlsafe(nbytes=12)
-        super(Product, self).save(*args, **kwargs)
-
-
 class ExtraFieldName(DateTimeMixin):
     name = models.CharField(
         max_length=255,
@@ -90,8 +65,8 @@ class ExtraFieldValue(DateTimeMixin):
         return f'{self.field_name}={self.value}'
 
 
-class ProductInventory(DateTimeMixin):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+class Product(DateTimeMixin):
+    name = models.CharField(max_length=400)
     description = models.TextField(blank=True, null=True)
     brand = models.ForeignKey(Brand, related_name='products', on_delete=models.CASCADE)
     shop = models.ForeignKey(Shop, related_name='products', on_delete=models.CASCADE)
@@ -111,14 +86,14 @@ class ProductInventory(DateTimeMixin):
     def save(self, *args, **kwargs):
         if not self.sku:
             self.sku = secrets.token_urlsafe(nbytes=12)
-        super(ProductInventory, self).save(*args, **kwargs)
+        super(Product, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.product.name
+        return self.name
 
 
 class ProductIventoryValue(DateTimeMixin):
-    product = models.ForeignKey(ProductInventory, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     extra_field_valye = models.ForeignKey(ExtraFieldValue, on_delete=models.CASCADE)
 
     class Meta:

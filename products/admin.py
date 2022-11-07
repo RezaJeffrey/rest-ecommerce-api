@@ -4,7 +4,6 @@ from products import models
 admin.site.register(models.Shop)
 admin.site.register(models.Brand)
 admin.site.register(models.ShopAddress)
-admin.site.register(models.Product)
 admin.site.register(models.ExtraFieldName)
 
 
@@ -36,4 +35,4 @@ class ExtraFieldValueAdmin(admin.ModelAdmin):
 
 
 admin.site.register(models.ExtraFieldValue, ExtraFieldAdmin)
-admin.site.register(models.ProductInventory, ExtraFieldValueAdmin)
+admin.site.register(models.Product, ExtraFieldValueAdmin)
