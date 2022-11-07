@@ -25,16 +25,16 @@ class ExtraFieldValueSerializer(serializers.ModelSerializer):
         fields = ['field_name', 'value']
         # TODO fix this create function
 
-    # def create(self, product_sku, **validated_data):
-    #     product = Product.objects.get(
-    #         sku=product_sku
-    #     )
-    #     field_value = ExtraFieldValue.objects.create(
-    #         product=product,
-    #         **validated_data
-    #     )
-    #     return field_value
-    #
+    def create(self, product_sku, **validated_data):
+        product = Product.objects.get(
+            sku=product_sku
+        )
+        field_value = ExtraFieldValue.objects.create(
+            product=product,
+            **validated_data
+        )
+        return field_value
+
 
 
 class BrandSerializer(serializers.ModelSerializer):
