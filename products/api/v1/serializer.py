@@ -4,7 +4,7 @@ from category.models import Category
 from rest_framework import serializers
 from likes.api.v1.serializer import LikeSerializer
 from comments.api.v1.serializer import CommentSerializer
-from extra_fields.api.V1.serializer import ExtraFieldSerializer
+from extra_fields.api.v1.serializer import ExtraFieldSerializer
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -35,4 +35,8 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        return Product.objects.create(**validated_data)
+        shop = validated_data.pop('shop')
+        product = Product.objects.create(**validated_data)
+        for shop in shop:
+            product.shop.add(shop)
+        return product

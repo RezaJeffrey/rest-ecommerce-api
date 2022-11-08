@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from .serializers import ProductSerializer, ProductCreateSerializer, ExtraFieldSerializer
+from .serializer import ProductSerializer, ProductCreateSerializer, ExtraFieldSerializer
 from rest_framework import permissions
 from products.models import Product
 from extra_fields.models import ExtraFieldValue
@@ -14,6 +14,8 @@ from rest_framework.permissions import IsAuthenticated
 class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
+    lookup_field = 'sku'
+    lookup_url_kwarg = 'sku'
 
     def get_serializer_class(self):
         if self.action == 'create':

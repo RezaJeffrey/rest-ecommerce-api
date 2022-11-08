@@ -10,7 +10,10 @@ urlpatterns = [
     path('categories/api/v1/', include('category.api.v1.urls', namespace='v1')),
     path('products/api/v1/', include('products.api.v1.urls', namespace='v1')),
     path('comments/api/v1/', include('comments.api.v1.urls', namespace='v1')),
-    path('packs/api/v1/', include('productpacks.api.V1.urls', namespace='V1'))
+    path('packs/api/v1/', include('productpacks.api.v1.urls', namespace='v1')),
+    path('extra_fields/api/v1/', include('extra_fields.api.v1.urls', namespace='v1')),
+    path('brands/api/v1/', include('brands.api.v1.urls', namespace='v1')),
+    path('shops/api/v1/', include('shops.api.v1.urls', namespace='v1'))
 ]
 
 if settings.DEBUG:

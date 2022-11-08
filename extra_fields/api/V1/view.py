@@ -3,7 +3,7 @@ from extra_fields.models import ExtraFieldValue
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework import status
-from extra_fields.api.V1.serializer import ExtraFieldSerializer
+from extra_fields.api.v1.serializer import ExtraFieldSerializer
 
 
 class ExtraFieldViewSet(ModelViewSet):
