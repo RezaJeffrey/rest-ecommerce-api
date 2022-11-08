@@ -3,68 +3,22 @@ import secrets
 from django.db import models
 from datetimemixin.models import DateTimeMixin
 from django.contrib.auth import get_user_model
-from products.models import Product
+from productpacks.models import ProductPack
 from extra_fields.models import ExtraFieldValue, ExtraFieldName
 
 User = get_user_model()
 
-"""
-class Pack(DateTimeMixin):
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE,
-        related_name='paks',
-        blank=False,
-    )
-    extra_field_names = models.ForeignKey(
-        ExtraFieldName,
-        related_name='paks',
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True
-    )
-    extra_field_values = models.ForeignKey(
-        ExtraFieldValue,
-        related_name="paks",
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True
-    )
-    sku = models.CharField(
-        max_length=255,
-        blank=False,
-        null=True,
-        unique=True
-    )
-
-    class Meta:
-        unique_together = ['extra_field_names', 'extra_field_values']
-
-    def save(self, *args, **kwargs):
-        if not self.sku:
-            self.sku = secrets.token_urlsafe(nbytes=12)
-        return super(Pack, self).save(*args, **kwargs)
-
-    def __unicode__(self):
-        return self.product
-
 
 class Cart(DateTimeMixin):
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         User,
-        on_delete=models.CASCADE,
-        related_name="carts",
-        blank=False
+        related_name='cart',
+        on_delete=models.CASCADE
     )
-    packs = models.ManyToManyField(
-        Pack,
-        related_name="carts",
-        blank=False,
-    )
+
     sku = models.CharField(
         max_length=255,
-        blank=False,
-        null=True,
+        blank=True,
         unique=True
     )
 
@@ -73,6 +27,49 @@ class Cart(DateTimeMixin):
             self.sku = secrets.token_urlsafe(nbytes=12)
         return super(Cart, self).save(*args, **kwargs)
 
-    def __unicode__(self):
-        return self.user
-"""
+    def __str__(self):
+        return f"{self.user}'s cart"
+
+
+class CartItem(DateTimeMixin):
+    cart = models.ForeignKey(
+        Cart,
+        on_delete=models.CASCADE,
+        blank=False,
+        related_name='items'
+    )
+    item = models.ForeignKey(
+        ProductPack,
+        on_delete=models.CASCADE,
+        blank=False,
+        related_name='cart_items'
+    )
+    quantity = models.PositiveIntegerField(
+        blank=False,
+        default=0
+    )
+    sku = models.CharField(
+        max_length=255,
+        blank=True,
+        unique=True
+    )
+
+    class Meta:
+        unique_together = ('cart', 'item')
+
+    def save(self, *args, **kwargs):
+        if not self.sku:
+            self.sku = secrets.token_urlsafe(nbytes=12)
+        return super(CartItem, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.item
+
+
+
+
+
+
+
+
+
