@@ -15,6 +15,8 @@ SECRET_KEY = env.str('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG')
 
+SITE_ID = 1
+
 ALLOWED_HOSTS = []
 
 # Application definition
@@ -25,6 +27,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     # Third-party packages
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
@@ -34,6 +37,14 @@ INSTALLED_APPS = [
     # local apps
     'users',
     'category',
+    'products',
+    'likes',
+    'comments',
+    'carts',
+    'productpacks',
+    'extra_fields',
+    'shops',
+    'brands'
 ]
 
 MIDDLEWARE = [
