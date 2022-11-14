@@ -8,6 +8,9 @@ class ExtraFieldNameSerializer(serializers.ModelSerializer):
         model = ExtraFieldName
         fields = ['name']
 
+    def create(self, validated_data):
+        return ExtraFieldName.objects.create(**validated_data)
+
 
 class ExtraFieldSerializer(serializers.ModelSerializer):
     field_name = serializers.PrimaryKeyRelatedField(

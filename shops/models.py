@@ -4,8 +4,8 @@ import secrets
 
 
 class ShopAddress(DateTimeMixin):
-    address = models.CharField(max_length=500)
-    postal_code = models.PositiveBigIntegerField(blank=True, null=True)  # TODO postal code iran format(max, min length)
+    address = models.CharField(max_length=500, unique=True)
+    postal_code = models.PositiveBigIntegerField(blank=True, null=True, unique=True)  # TODO postal code iran format(max, min length)
     sku = models.CharField(
         max_length=255,
         blank=True,

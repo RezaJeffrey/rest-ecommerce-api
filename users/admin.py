@@ -21,7 +21,7 @@ class UserAdmin(BaseUserAdmin):
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
         (_('user_info'), {'fields': (
             'national_code', 'phone_number',
-            'phone_number_verified', 'email_verified')}),
+            'phone_number_verified', 'email_verified', 'role')}),
     )
 
     list_display = [
@@ -29,5 +29,5 @@ class UserAdmin(BaseUserAdmin):
         'last_name', 'is_staff',
         "is_active", 'national_code',
         'phone_number', 'phone_number_verified',
-        'email_verified'
+        'email_verified', 'role'
     ]

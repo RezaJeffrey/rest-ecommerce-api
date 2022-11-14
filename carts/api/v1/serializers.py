@@ -4,7 +4,7 @@ from productpacks.models import ProductPack
 from django.shortcuts import get_object_or_404
 
 
-class CartSerializer(serializers.ModelSerializer):
+class CartCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = []
@@ -13,7 +13,19 @@ class CartSerializer(serializers.ModelSerializer):
         return Cart.objects.create(user=user, **validated_data)
 
 
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = ['__str__']
+
+
 class CartItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CartItem
+        fields = ['item', 'quantity']
+
+
+class CartItemCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
         fields = [

@@ -20,7 +20,8 @@ class CreatePack(APIView):
         if serializer.is_valid():
             serializer.create(product_sku=product_sku)
             response = {
-                "data": serializer.data
+                "data": serializer.data,
+                "message": 'successfully!'
             }
             code = status.HTTP_201_CREATED
         else:

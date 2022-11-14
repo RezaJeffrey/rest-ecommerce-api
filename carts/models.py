@@ -5,6 +5,7 @@ from datetimemixin.models import DateTimeMixin
 from django.contrib.auth import get_user_model
 from productpacks.models import ProductPack
 from extra_fields.models import ExtraFieldValue, ExtraFieldName
+from carts.validators import validate_none_zero
 
 User = get_user_model()
 
@@ -46,7 +47,10 @@ class CartItem(DateTimeMixin):
     )
     quantity = models.PositiveIntegerField(
         blank=False,
-        default=0
+        default=1,
+        validators=[
+            validate_none_zero
+        ]
     )
     sku = models.CharField(
         max_length=255,
@@ -63,7 +67,7 @@ class CartItem(DateTimeMixin):
         return super(CartItem, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.item
+        return self.item.product.name
 
 
 

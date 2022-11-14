@@ -1,12 +1,45 @@
 from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
-    ListCreateAPIView,
-    RetrieveAPIView
+    ListAPIView,
+    RetrieveAPIView,
+    CreateAPIView
 )
 from carts.models import Cart, CartItem
-from carts.api.v1.serializers import CartSerializer, CartItemSerializer
+from carts.api.v1.serializers import(
+    CartSerializer, CartCreateSerializer,
+    CartItemSerializer, CartItemCreateSerializer
+)
 from rest_framework import status
 from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+
+
+class CartCreateView(CreateAPIView):
+    serializer_class = CartCreateSerializer
+
+    def create(self, request):
+        payload = request.data
+        serializer = self.serializer_class(data=payload)
+        user = request.user
+        if serializer.is_valid():
+            serializer.create(
+                user=user,
+                validated_data=serializer.validated_data
+            )
+            response = {
+                'data': serializer.data,
+                'message': 'successfully!'
+            }
+            code = status.HTTP_201_CREATED
+        else:
+            response = {
+                'error': serializer.errors
+            }
+            code = status.HTTP_403_FORBIDDEN
+        return Response(
+            data=response,
+            status=code
+        )
 
 
 class CartView(RetrieveAPIView):
@@ -14,7 +47,8 @@ class CartView(RetrieveAPIView):
 
     def get_object(self):
         user = self.request.user
-        queryset = Cart.objects.get(
+        queryset = get_object_or_404(
+            Cart,
             user=user
         )
         return queryset
@@ -23,7 +57,7 @@ class CartView(RetrieveAPIView):
         cart = self.get_object()
         serializer = self.serializer_class(instance=cart, many=False)
         response = {
-            serializer.data
+            'data': serializer.data
         }
         code = status.HTTP_200_OK
         return Response(
@@ -32,7 +66,7 @@ class CartView(RetrieveAPIView):
         )
 
 
-class CartItemLCView(ListCreateAPIView):
+class CartItemLView(ListAPIView):
     serializer_class = CartItemSerializer
 
     def get_queryset(self):
@@ -57,14 +91,20 @@ class CartItemLCView(ListCreateAPIView):
             status=code
         )
 
-    def create(self, request, cart_sku, product_pack_sku):
+
+class CartItemCView(CreateAPIView):
+    serializer_class = CartItemCreateSerializer
+
+    def create(self, request, product_pack_sku):
         payload = request.data
         serializer = self.serializer_class(data=payload)
+        user = request.user
+        cart_sku = user.cart.sku
         if serializer.is_valid():
             serializer.create(
                 cart_sku=cart_sku,
                 product_pack_sku=product_pack_sku,
-                **serializer.validated_data
+                validated_data=serializer.validated_data
             )
             response = {
                 'message': 'Item added successfully!',
@@ -83,10 +123,18 @@ class CartItemLCView(ListCreateAPIView):
 
 
 class CartItemRUDView(RetrieveUpdateDestroyAPIView):
-    pass
+    serializer_class = CartItemSerializer
+    lookup_field = 'sku'
 
+    def get_object(self):
+        import pdb;
+        pdb.set_trace()
 
+    def retrieve(self, request, *args, **kwargs):
+        pass
 
+    def update(self, request, *args, **kwargs):
+        pass
 
-
-
+    def destroy(self, request, *args, **kwargs):
+        pass

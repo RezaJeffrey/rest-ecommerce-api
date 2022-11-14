@@ -1,3 +1,29 @@
 from django.contrib import admin
+from carts.models import CartItem, Cart
+from productpacks.models import ProductPack
 
-# Register your models here.
+
+class CartItemInline(admin.StackedInline):
+    model = CartItem
+    fields = [
+        'cart', 'item',
+        'quantity'
+    ]
+
+
+class CartAdmin(admin.ModelAdmin):
+    inlines = [
+        CartItemInline
+    ]
+
+
+admin.site.register(Cart, CartAdmin)
+
+
+
+
+
+
+
+
+

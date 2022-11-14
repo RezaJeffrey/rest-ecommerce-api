@@ -19,7 +19,6 @@ class ProductPack(DateTimeMixin):
         ExtraFieldValue,
         related_name="paks",
         blank=True,
-        null=True
     )
     sku = models.CharField(
         max_length=255,
