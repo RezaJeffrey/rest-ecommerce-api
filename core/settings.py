@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'extra_fields',
     'shops',
     'brands',
+    'address',
+    'orders'
 ]
 
 MIDDLEWARE = [
