@@ -15,7 +15,8 @@ urlpatterns = [
     path('brands/api/v1/', include('brands.api.v1.urls', namespace='v1')),
     path('shops/api/v1/', include('shops.api.v1.urls', namespace='v1')),
     path('carts/api/v1/', include('carts.api.v1.urls', namespace='v1')),
-    path('address/api/v1/', include('address.api.v1.urls', namespace='v1'))
+    path('address/api/v1/', include('address.api.v1.urls', namespace='v1')),
+    path('orders/api/v1/', include('orders.api.v1.urls', namespace='v1'))
 ]
 
 if settings.DEBUG:
