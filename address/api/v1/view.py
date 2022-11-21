@@ -1,4 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.permissions import IsAuthenticated
 from address.models import Address
 from address.api.v1.serializers import AddressSerializer
 from rest_framework.response import Response
@@ -10,6 +11,7 @@ class AddressView(ModelViewSet):
     serializer_class = AddressSerializer
     lookup_field = 'sku'
     lookup_url_kwarg = 'sku'
+    # permission_classes = [IsAuthenticated]
 
     def create(self, request):
         payload = request.data

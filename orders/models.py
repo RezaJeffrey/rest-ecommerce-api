@@ -84,7 +84,7 @@ class OrderStatus(DateTimeMixin):
     def save(self, *args, **kwargs):
         if not self.sku:
             self.sku = secrets.token_urlsafe(nbytes=12)
-        return super(OrderAdmin, self).save(*args, **kwargs)
+        return super(OrderStatus, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.status

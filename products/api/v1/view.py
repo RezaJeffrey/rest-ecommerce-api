@@ -11,7 +11,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 
 
+# TODO [BUG] drf-yasg occurs to bug cause of this viewset and most probably the serializer
 class ProductViewSet(ModelViewSet):
+
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
     lookup_field = 'sku'
