@@ -1,5 +1,4 @@
 import secrets
-
 from django.db import models
 from datetimemixin.models import DateTimeMixin
 from django.contrib.auth import get_user_model

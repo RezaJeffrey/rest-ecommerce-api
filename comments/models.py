@@ -6,6 +6,7 @@ from likes.models import Like
 from django.contrib.auth import get_user_model
 import secrets
 
+
 User = get_user_model()
 
 
