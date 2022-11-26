@@ -4,16 +4,20 @@ from carts.api.v1.serializers import CartSerializer
 from address.api.v1.serializers import AddressSerializer
 
 
-class OrderAdminSerializer(serializers.ModelSerializer):
+class OrderStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderStatus
         fields = [
             'status'
         ]
 
+    def update(self, instance, **validated_data):
+        instance.status = validated_data.get('status', instance.status)
+        return instance.save()
+
 
 class OrderSerializer(serializers.ModelSerializer):
-    status = OrderAdminSerializer(many=False)
+    status = OrderStatusSerializer(many=False)
     order_cart = CartSerializer(many=False)
     address = AddressSerializer(many=False)
 
