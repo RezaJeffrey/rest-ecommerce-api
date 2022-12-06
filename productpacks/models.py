@@ -20,6 +20,9 @@ class ProductPack(DateTimeMixin):
         related_name="paks",
         blank=True,
     )
+    stock = models.IntegerField(default=0)
+    # TODO remove the default value (add to test only)
+    price = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     sku = models.CharField(
         max_length=255,
         blank=True,

@@ -34,3 +34,13 @@ class ExtraFieldSerializer(serializers.ModelSerializer):
             **validated_data
         )
         return field_value
+
+
+# class ExtraFieldValueSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = ExtraFieldValue
+#         fields = [
+#             'product', 'field_name',
+#             'value'
+#         ]
