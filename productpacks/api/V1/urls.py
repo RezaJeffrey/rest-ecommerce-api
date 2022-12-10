@@ -1,17 +1,16 @@
-from django.urls import path
+from django.urls import path, include
 from .views import (
-    CreatePack,
-    ValueList, UpdateValue
+    ProductPackViewSet,
 )
+from rest_framework.routers import DefaultRouter
+router = DefaultRouter()
+router.register(r'productpack', ProductPackViewSet, basename='productpack')
+
 
 app_name = 'product_pack'
 urlpatterns = [
-    path("create_pack/", CreatePack.as_view(), name="create_pack"),
-    path("value_list/<str:product_sku>/", ValueList.as_view(), name='value_list'),
-    path("update_value/<str:product_pack_sku>/<str:value_sku>/", UpdateValue.as_view(), name='update_value')
+    # path("create_pack/", ProductPackViewSet.as_view(), name="create_pack"),
+    # path("value_list/<str:product_sku>/", ValueList.as_view(), name='value_list'),
+    path('', include(router.urls))
 ]
-
-
-
-
 

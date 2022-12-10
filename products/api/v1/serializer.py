@@ -11,7 +11,6 @@ class ProductSerializer(serializers.ModelSerializer):
     category = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.filter(child=None)
     )
-    extra_fields = ExtraFieldSerializer(many=True)
     likes = LikeSerializer(many=True)
     comments = CommentSerializer(many=True)
 
@@ -20,7 +19,7 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = [
             'name', 'category',
             'description', 'brand',
-            'shop', 'extra_fields',
+            'shop',
             'likes', 'comments'
         ]
 

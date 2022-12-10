@@ -36,6 +36,3 @@ class ProductPack(DateTimeMixin):
 
     def __str__(self):
         return self.product.name
-
-
-
