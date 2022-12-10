@@ -42,16 +42,9 @@ class ProductPackCreateSerializer(serializers.ModelSerializer):
         return instance
 
 
-class ValueListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ExtraFieldValue
-        fields = [
-            'field_name', 'value'
-        ]
-
-
 class ListProductPacksSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
+    extra_field_values = ExtraFieldSerializer(many=True)
 
     class Meta:
         model = ProductPack
@@ -81,21 +74,3 @@ class UpdateValueSerializer(serializers.ModelSerializer):
         product_pack.extra_field_values.remove(pre_value)
         product_pack.extra_field_values.add(new_value)
         return product_pack
-
-        # def validate(self, attrs):
-        #     product_pack_sku = self.context['product_pack_sku']
-        #     value_sku = self.context['value_sku']
-        #     product_pack = ProductPack.objects.get(
-        #         sku=product_pack_sku
-        #     )
-        #     value = ExtraFieldValue.objects.get(
-        #         sku=value_sku
-        #     )
-        #     value_field_name = value.field_name
-        #     queryset = product_pack.extra_field_values.filter(
-        #         field_name=value_field_name
-        #     )
-        #     if not queryset.exists():
-        #         message = 'There isn\'t any value with the field name your value has!'
-        #         raise serializers.ValidationError(message)
-        #     return attrs
