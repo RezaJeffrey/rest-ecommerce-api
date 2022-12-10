@@ -26,12 +26,6 @@ class ExtraFieldName(DateTimeMixin):
     
 
 class ExtraFieldValue(DateTimeMixin):
-    product = models.ForeignKey(
-        Product,
-        on_delete=models.CASCADE,
-        blank=False,
-        related_name='extra_fields'
-    )
     field_name = models.ForeignKey(
         ExtraFieldName,
         on_delete=models.CASCADE,
@@ -49,7 +43,7 @@ class ExtraFieldValue(DateTimeMixin):
     )
 
     class Meta:
-        unique_together = ('product', "field_name", "value",)
+        unique_together = ("field_name", "value",)
 
     def save(self, *args, **kwargs):
         if not self.sku:
@@ -57,7 +51,7 @@ class ExtraFieldValue(DateTimeMixin):
         return super(ExtraFieldValue, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.field_name}={self.value}'
+        return f'{self.field_name} = {self.value}'
 
 
 
