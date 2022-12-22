@@ -1,6 +1,5 @@
 from django.contrib import admin
 from products import models
-from extra_fields.admin import ValueInline
 
 
 class ProductImageInline(admin.TabularInline):
@@ -9,8 +8,7 @@ class ProductImageInline(admin.TabularInline):
 
 class ProductAdmin(admin.ModelAdmin):
     inlines = [
-        ProductImageInline,
-        ValueInline
+        ProductImageInline
     ]
 
 

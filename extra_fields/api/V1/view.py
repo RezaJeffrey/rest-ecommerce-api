@@ -17,9 +17,30 @@ class ExtraFieldNameViewSet(ModelViewSet):
     def get_permissions(self):
         if self.action == 'list' or self.action == 'retrieve':
             permission_class = []
+        elif self.request.user.is_superuser:
+            permission_class = []
         else:
             permission_class = [IsSeller]
         return [permission() for permission in permission_class]
+
+    def create(self, request):
+        payload = request.data
+        serializer = self.serializer_class(data=payload)
+        if serializer.is_valid():
+            serializer.create(
+                validated_data=serializer.validated_data
+            )
+            response = {
+                "data": serializer.data,
+            }
+            code = status.HTTP_201_CREATED
+        else:
+            response = {
+                "errors": serializer.errors
+            }
+            code = status.HTTP_400_BAD_REQUEST
+
+        return Response(data=response, status=code)
 
 
 class ExtraFieldViewSet(ModelViewSet):
@@ -35,12 +56,11 @@ class ExtraFieldViewSet(ModelViewSet):
             permission_class = [permissions.IsAuthenticated]
         return [permission() for permission in permission_class]
 
-    def create(self, request, product_sku=None):
+    def create(self, request):
         payload = request.data
         serializer = self.serializer_class(data=payload)
         if serializer.is_valid():
             serializer.create(
-                product_sku=product_sku,
                 **serializer.validated_data
             )
             response = {

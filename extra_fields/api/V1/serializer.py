@@ -9,28 +9,25 @@ class ExtraFieldNameSerializer(serializers.ModelSerializer):
         fields = ['name']
 
     def create(self, validated_data):
-        return ExtraFieldName.objects.create(**validated_data)
+        name = validated_data.pop('name')
+        return ExtraFieldName.objects.create(
+            name=name,
+            **validated_data
+        )
 
 
 class ExtraFieldSerializer(serializers.ModelSerializer):
-    field_name = serializers.PrimaryKeyRelatedField(
-        queryset=ExtraFieldName.objects.all()
-    )
-    product = serializers.PrimaryKeyRelatedField(
-        many=False,
-        read_only=True,
-    )
+    field_name = ExtraFieldNameSerializer()
 
     class Meta:
         model = ExtraFieldValue
-        fields = ['field_name', 'value', 'product']
+        fields = ['field_name', 'value']
 
-    def create(self, product_sku, **validated_data):
-        product = Product.objects.get(
-            sku=product_sku
-        )
+    def create(self, **validated_data):
+
         field_value = ExtraFieldValue.objects.create(
-            product=product,
             **validated_data
         )
         return field_value
+
+

@@ -1,6 +1,8 @@
 from datetimemixin.models import DateTimeMixin
 from django.db import models
 import secrets
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
 class ShopAddress(DateTimeMixin):
@@ -39,3 +41,21 @@ class Shop(DateTimeMixin):
     def __str__(self):
         return self.name
 
+
+class ShopStaf(DateTimeMixin):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    shop = models.ForeignKey(Shop, related_name="shopstaf", on_delete=models.CASCADE)
+    is_owner = models.BooleanField(default=False)
+    sku = models.CharField(
+        max_length=255,
+        blank=True,
+        unique=True
+    )
+
+    def save(self, *args, **kwargs):
+        if not self.sku:
+            self.sku = secrets.token_urlsafe(nbytes=12)
+        return super(ShopStaf, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.user.username}  : {self.shop.name}"
