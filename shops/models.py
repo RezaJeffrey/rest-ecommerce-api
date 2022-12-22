@@ -58,4 +58,4 @@ class ShopStaf(DateTimeMixin):
         return super(ShopStaf, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.staf.name}  -- > staf_of: {self.shop.name}"
+        return f"{self.user.username}  : {self.shop.name}"
