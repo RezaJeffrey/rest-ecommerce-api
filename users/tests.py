@@ -1,9 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.db import IntegrityError, transaction
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework_simplejwt.tokens import RefreshToken
+from .api.v1.views import MyTokenObtainPairView
+from rest_framework_simplejwt.views import TokenBlacklistView
 
 
 class TestUser(APITestCase):
@@ -64,7 +66,7 @@ class TestUser(APITestCase):
         """login with correct username and password"""
         username = self.username
         password = self.password
-        url = reverse_lazy('v1:login')
+        url = reverse_lazy('users:login')
         payload = {
             'username': username,
             'password': password
@@ -78,7 +80,7 @@ class TestUser(APITestCase):
         """login with incorrect username and password"""
         username = self.username
         password = "invalid_password"
-        url = reverse_lazy('v1:login')
+        url = reverse_lazy('users:login')
         payload = {
             'username': username,
             'password': password
@@ -91,7 +93,7 @@ class TestUser(APITestCase):
     def test_valid_refresh_token_validation_success(self):
         """check valid refresh token"""
         token = RefreshToken.for_user(self.user)
-        url = reverse_lazy("v1:refresh")
+        url = reverse_lazy("users:refresh")
         payload = {"refresh": str(token)}
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -101,7 +103,7 @@ class TestUser(APITestCase):
     def test_invalid_refresh_token_validation_failure(self):
         """check invalid refresh token"""
         token = "invalid_token"
-        url = reverse_lazy("v1:refresh")
+        url = reverse_lazy("users:refresh")
         payload = {"refresh": token}
         response = self.client.post(url, payload)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -168,7 +170,18 @@ class TestUser(APITestCase):
     def test_user_edit_profile_invalid_last_name_failure(self):
         pass
 
-    def test_user_logout_success(self):
-        pass
+    def test_user_logout_with_correct_refresh_token_success(self):
+        token = RefreshToken.for_user(self.user)
+        url = reverse("users:logout")
+        payload = {"refresh": str(token)}
+        response = self.client.post(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_logout_with_invalid_refresh_token_failure(self):
+        token = "Invalid Token"
+        url = reverse("users:logout")
+        payload = {"refresh": token}
+        response = self.client.post(url, payload)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
