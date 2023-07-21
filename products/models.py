@@ -16,6 +16,7 @@ class Product(DateTimeMixin):
     name = models.CharField(
         max_length=255,
         blank=False,
+        null=True,
         unique=True
     )
     category = models.ForeignKey(
@@ -31,6 +32,7 @@ class Product(DateTimeMixin):
     sku = models.CharField(
         max_length=255,
         blank=True,
+        null=True,
         unique=True
     )
     likes = GenericRelation(Like, related_query_name='likes')

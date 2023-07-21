@@ -17,13 +17,16 @@ class Like(DateTimeMixin):
     )
     content_type = models.ForeignKey(
         ContentType,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        blank=False,
+        null=True
     )
-    object_id = models.PositiveIntegerField()
+    object_id = models.PositiveIntegerField(default=0)
     content_object = GenericForeignKey('content_type', 'object_id')
     sku = models.CharField(
         max_length=255,
         blank=False,
+        null=True,
         unique=False
     )
 

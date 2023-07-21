@@ -13,7 +13,8 @@ class Comment(DateTimeMixin):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        blank=False
+        blank=False,
+        null=True
     )
     reply_comment = models.ForeignKey(
         'self',
@@ -23,7 +24,8 @@ class Comment(DateTimeMixin):
         related_name='replies'
     )
     text = models.TextField(
-        blank=False
+        blank=False,
+        null=True
     )
     object_id = models.PositiveIntegerField()
     content_type = models.ForeignKey(
@@ -35,6 +37,7 @@ class Comment(DateTimeMixin):
     sku = models.CharField(
         max_length=255,
         blank=False,
+        null=True,
         unique=True
     )
 

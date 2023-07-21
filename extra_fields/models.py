@@ -8,11 +8,13 @@ class ExtraFieldName(DateTimeMixin):
     name = models.CharField(
         max_length=255,
         blank=False,
+        null=True,
         unique=True
     )
     sku = models.CharField(
         max_length=255,
         blank=True,
+        null=True,
         unique=True
     )
     
@@ -30,17 +32,20 @@ class ExtraFieldValue(DateTimeMixin):
         Product,
         on_delete=models.CASCADE,
         blank=False,
+        null=True,
         related_name='extra_fields'
     )
     field_name = models.ForeignKey(
         ExtraFieldName,
         on_delete=models.CASCADE,
         blank=False,
+        null=True,
         related_name="values"
     )
     value = models.CharField(
         max_length=255,
         blank=False,
+        null=True,
     )
     sku = models.CharField(
         max_length=255,

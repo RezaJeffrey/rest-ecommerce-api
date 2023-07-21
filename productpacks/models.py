@@ -13,16 +13,19 @@ class ProductPack(DateTimeMixin):
         Product,
         on_delete=models.CASCADE,
         related_name="paks",
-        blank=False
+        blank=False,
+        null=True,
     )
     extra_field_values = models.ManyToManyField(
         ExtraFieldValue,
         related_name="paks",
         blank=True,
+        null=True,
     )
     sku = models.CharField(
         max_length=255,
         blank=True,
+        null=True,
         unique=True
     )
 

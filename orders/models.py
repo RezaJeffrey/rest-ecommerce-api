@@ -18,12 +18,14 @@ class Order(DateTimeMixin):
         get_user_model(),
         on_delete=models.CASCADE,
         blank=False,
+        null=True,
         related_name='orders'
     )
     address = models.ForeignKey(
         Address,
         on_delete=models.CASCADE,
         blank=False,
+        null=True,
         related_name='orders'
     )
     order_cart = models.OneToOneField(
@@ -41,6 +43,7 @@ class Order(DateTimeMixin):
     sku = models.CharField(
         max_length=255,
         blank=True,
+        null=True,
         unique=True
     )
 
@@ -78,6 +81,7 @@ class OrderStatus(DateTimeMixin):
     sku = models.CharField(
         max_length=255,
         blank=True,
+        null=True,
         unique=True
     )
 

@@ -4,11 +4,12 @@ import secrets
 
 
 class ShopAddress(DateTimeMixin):
-    address = models.CharField(max_length=500, unique=True)
+    address = models.CharField(max_length=500, blank=False, null=True, unique=True)
     postal_code = models.PositiveBigIntegerField(blank=True, null=True, unique=True)  # TODO postal code iran format(max, min length)
     sku = models.CharField(
         max_length=255,
         blank=True,
+        null=True,
         unique=True
     )
 
@@ -22,12 +23,13 @@ class ShopAddress(DateTimeMixin):
 
 
 class Shop(DateTimeMixin):
-    name = models.CharField(max_length=255)
-    province = models.CharField(max_length=120)  # TODO choicefields for province
+    name = models.CharField(max_length=255, blank=False, null=True)
+    province = models.CharField(max_length=120, blank=False, null=True)  # TODO choicefields for province
     address = models.OneToOneField(ShopAddress, on_delete=models.SET_NULL, blank=True, null=True)
     sku = models.CharField(
         max_length=255,
         blank=True,
+        null=True,
         unique=True
     )
 
