@@ -1,27 +1,33 @@
 from django.db import models
+<<<<<<< HEAD
+
+
+
+=======
 from datetimemixin.models import DateTimeMixin
 from products.models import Product
-from shops.models import Shop
-import secrets
 
 
-# discount on single products using code/ discount by percentage
-
+# discount on single products using code/ discount by price
 class DiscountCode(DateTimeMixin):
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE)
-    code = models.CharField(max_length=30, unique=True)
-    available_until = models.DateTimeField()
-    amount = models.PositiveIntegerField(blank=True, null=True)
-    percent = models.PositiveIntegerField(default=0)
-    discount_limit = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
+    code = models.CharField(max_length=30)
+    available_untill = models.DateTimeField()
     is_active = models.BooleanField(default=True)
-    sku = models.CharField(max_length=255, blank=True, null=True)
+>>>>>>> parent of 2b14169 ([feat][Beta] implement discount by percent system, change cart api system)
+
+
+<<<<<<< HEAD
+
+
+
+=======
+>>>>>>> parent of 2b14169 ([feat][Beta] implement discount by percent system, change cart api system)
+
+class ProductDiscount(DateTimeMixin):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    discount_code = models.ForeignKey(DiscountCode, on_delete=models.CASCADE)
+    new_price = models.DecimalField(decimal_places=2)
+    percent = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return self.code
-
-    def save(self, *args, **kwargs):
-        if not self.sku:
-            self.sku = secrets.token_urlsafe(nbytes=12)
-        return super(DiscountCode, self).save(*args, **kwargs)
-
+        return f'{self.product.name} -p {self.percent}%'

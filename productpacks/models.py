@@ -21,7 +21,8 @@ class ProductPack(DateTimeMixin):
         blank=True,
     )
     stock = models.IntegerField(default=0)
-    price = models.DecimalField(decimal_places=2, max_digits=12)
+    # TODO remove the default value (add to test only)
+    price = models.DecimalField(decimal_places=2, max_digits=12, default=0)
     sku = models.CharField(
         max_length=255,
         blank=True,
@@ -34,8 +35,4 @@ class ProductPack(DateTimeMixin):
         return super(ProductPack, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.product.name} - {self.price}'
-
-    def update_stock(self, new_stock, *args, **kwargs):
-        self.stock = new_stock
-        return super(ProductPack, self).save(*args, **kwargs)
+        return self.product.name

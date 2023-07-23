@@ -27,7 +27,7 @@ urlpatterns = [
     # Local
     path('admin/', admin.site.urls),
     path('shops/api/v1/', include('shops.api.v1.urls', namespace='v1')),
-    path('users/api/v1/', include('users.api.v1.urls', namespace='v1')),
+    path('users/api/v1/', include('users.api.v1.urls', namespace='users')),
     path('categories/api/v1/', include('category.api.v1.urls', namespace='v1')),
     path('products/api/v1/', include('products.api.v1.urls', namespace='v1')),
     path('comments/api/v1/', include('comments.api.v1.urls', namespace='v1')),
@@ -37,7 +37,7 @@ urlpatterns = [
     path('carts/api/v1/', include('carts.api.v1.urls', namespace='v1')),
     path('address/api/v1/', include('address.api.v1.urls', namespace='v1')),
     path('orders/api/v1/', include('orders.api.v1.urls', namespace='v1')),
-    path('discounts/api/v1/', include('discount.api.v1.urls', namespace='v1')),
+    #path('discounts/api/v1/', include('discount.api.v1.urls', namespace='v1')),
 ]
 
 if settings.DEBUG:

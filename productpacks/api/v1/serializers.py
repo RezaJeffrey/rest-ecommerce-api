@@ -33,6 +33,14 @@ class ProductPackCreateSerializer(serializers.ModelSerializer):
         product_pack.extra_field_values.set(validated_data['extra_field_values'])
         return product_pack
 
+    def update(self, instance, validated_data):
+        instance.product = validated_data.get('product', instance.product)
+        instance.extra_field_values = validated_data.get('extra_field_values', instance.extra_field_values)
+        instance.stock = validated_data.get('stock', instance.stock)
+        instance.price = validated_data.get('price', instance.price)
+        instance.save()
+        return instance
+
 
 class ListProductPacksSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
@@ -53,7 +61,6 @@ class UpdateValueSerializer(serializers.ModelSerializer):
         model = ProductPack
         fields = []
 
-    # TODO BUG
     def update(self):
         product_pack = ProductPack.objects.get(
             sku=self.context['product_pack_sku']
