@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'address',
     'orders',
     'discount',
+    'blacklists'
 ]
 
 MIDDLEWARE = [
