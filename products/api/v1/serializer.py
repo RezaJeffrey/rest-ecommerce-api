@@ -30,7 +30,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
         fields = [
             'name', 'category',
             'description', 'brand',
-            'shop',
+            'shopstafs',
         ]
 
     def create(self, validated_data):

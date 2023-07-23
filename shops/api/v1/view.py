@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
-from shops.api.v1.serializer import ShopSerializer, ShopAddressSerializer
+from shops.api.v1.serializer import ShopSerializer, ShopAddressSerializer, ShopStafSerializer
 from core.permissions import IsCustomer, IsSeller
-from shops.models import Shop, ShopAddress
+from shops.models import Shop, ShopAddress, ShopStaf
 
 
 class ShopView(ModelViewSet):
@@ -26,7 +26,6 @@ class ShopAddressView(ModelViewSet):
         else:
             permission_classes = [IsCustomer]
         return [permission() for permission in permission_classes]
-
 
 
 

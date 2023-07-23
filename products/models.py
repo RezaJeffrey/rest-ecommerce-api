@@ -11,7 +11,6 @@ import secrets
 
 User = get_user_model()
 
-
 class Product(DateTimeMixin):
     name = models.CharField(
         max_length=255,
@@ -27,7 +26,7 @@ class Product(DateTimeMixin):
         null=True
     )
     brand = models.ForeignKey(Brand, related_name='products', on_delete=models.CASCADE)
-    shop = models.ManyToManyField(Shop, related_name='products')
+    shop = models.ManyToManyField(Shop, related_name='products') 
     sku = models.CharField(
         max_length=255,
         blank=True,
@@ -49,5 +48,4 @@ class ProductImage(DateTimeMixin):
     product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='images/products')
     alt_text = models.CharField(max_length=255, blank=True, null=True)
-
 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from shops.models import Shop, ShopAddress
+from shops.models import Shop, ShopAddress, ShopStaf
 
 
 class ShopAddressSerializer(serializers.ModelSerializer):
@@ -16,6 +16,14 @@ class ShopSerializer(serializers.ModelSerializer):
         fields = [
             'name', 'address',
             'province'
+        ]
+
+
+class ShopStafSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ShopStaf
+        fields = [
+            "user", "shop", "is_owner"
         ]
 
 

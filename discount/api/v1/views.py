@@ -18,7 +18,8 @@ class ProductDiscountView(ListCreateAPIView):
     serializer_class = ProductDiscountSerializer
 
     def list(self, request, product_pack_pk):
-        product_pack = get_object_or_404(ProductPack, pk = product_pack_pk)
+        # TO DO only seller who owns the shop of product can see the list of discount codes
+        product_pack = get_object_or_404(ProductPack, pk=product_pack_pk)
         user = request.user
         
 

@@ -1,10 +1,18 @@
 from rest_framework import serializers
 from products.models import Product
+from shops.models import Shop
 from extra_fields.models import ExtraFieldValue
 from productpacks.models import ProductPack
 from products.api.v1.serializer import ProductSerializer
 from extra_fields.api.v1.serializer import ExtraFieldSerializer
 
+class GetShopsPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):
+    def get_queryset(self):
+        request = self.context.get("request", None)
+        queryset = super(GetShopsPrimaryKeyRelatedField, self).get_queryset()
+        if not request or not queryset:
+            return None
+        import pdb;pdb.set_trace()
 
 class ProductPackCreateSerializer(serializers.ModelSerializer):
     product = serializers.PrimaryKeyRelatedField(
@@ -15,14 +23,24 @@ class ProductPackCreateSerializer(serializers.ModelSerializer):
         many=True,
         queryset=ExtraFieldValue.objects.all()
     )
+    shop = GetShopsPrimaryKeyRelatedField(
+        many=True,
+        queryset=Shop.objects.all()
+    )
 
     class Meta:
         model = ProductPack
         fields = [
             'product',
             'extra_field_values',
-            'stock', 'price'
+            'stock', 'price',
+            'shop'
         ]
+
+    def validate(self, attrs):
+        import pdb;pdb.set_trace()
+        valid_shops = self.context['request'].user.shopstafs.all()
+
 
     def create(self, validated_data):
         product_pack = ProductPack.objects.create(
