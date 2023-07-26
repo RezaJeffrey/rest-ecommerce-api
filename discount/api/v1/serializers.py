@@ -21,19 +21,21 @@ class DiscountCodeSerializer(serializers.ModelSerializer):
 
 
 class ProductDiscountSerializer(serializers.ModelSerializer):
+    discount_code = DiscountCodeSerializer()
     class Meta:
         model = ProductDiscount
         fields = [
-            "percent"
+            "discount_code", "percent"
         ]
 
-    def create(self, validated_data, product_pack, discount_code):
+    def create(self, validated_data, product_pack):
         new_price = product_pack.price * validated_data["percent"] / 100
+        discount_code = DiscountCode.objects.create(**validated_data["discount_code"])
         product_discount = ProductDiscount.objects.create(
-            product_pack,
-            discount_code,
-            new_price,
-            validated_data["percent"]
+            product_pack = product_pack,
+            discount_code = discount_code,
+            new_price = new_price,
+            percent = validated_data["percent"]
         )
         return product_discount
 

@@ -25,6 +25,15 @@ class IsSeller(BasePermission):
         return boolean
 
 
+class NotAllowed(BasePermission):
+    def has_permission(self, request, view):
+        return False
+
+
+class Allowed(BasePermission):
+    def has_permission(self, request, view):
+        return True
+
 
 
 
