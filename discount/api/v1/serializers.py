@@ -1,4 +1,6 @@
 from discount.models import DiscountCode, ProductDiscount
+from blacklists.models import Blacklist
+from blacklists.serializers import BlacklistSerializer
 from rest_framework import serializers
 
 
@@ -22,6 +24,19 @@ class DiscountCodeSerializer(serializers.ModelSerializer):
 
 class ProductDiscountSerializer(serializers.ModelSerializer):
     discount_code = DiscountCodeSerializer()
+    black_list = BlacklistSerializer(many=True)
+    class Meta:
+        model = ProductDiscount
+        fields = [
+            "product_pack",
+            "discount_code",
+            "new_price",
+            "percent",
+            "black_list",   
+        ]
+
+class ProductDiscountCreateSerializer(serializers.ModelSerializer):
+    discount_code = DiscountCodeSerializer()
     class Meta:
         model = ProductDiscount
         fields = [
@@ -38,8 +53,23 @@ class ProductDiscountSerializer(serializers.ModelSerializer):
             percent = validated_data["percent"]
         )
         return product_discount
-
+    
+class ProductDiscountUpdateSerializer(serializers.ModelSerializer):
+    discount_code = DiscountCodeSerializer()
+    class Meta:
+        model = ProductDiscount
+        fields = [
+            "discount_code", "percent"
+        ]
+    
     def update(self, instance, validated_data):
-        instance.percent = validated_data.get("percent", instance.percent)
+        new_percent = validated_data.get("percent", instance.percent)
+        instance.new_price = (new_percent / instance.percent) * float(instance.new_price)
+        instance.percent = new_percent
+        discount_code = instance.discount_code
+        new_discount_code = validated_data.get("discount_code", instance.discount_code)
+        discount_code.code = new_discount_code.get("code")
+        discount_code.available_untill = new_discount_code.get("available_untill")
+        discount_code.save()
         instance.save()
         return instance
