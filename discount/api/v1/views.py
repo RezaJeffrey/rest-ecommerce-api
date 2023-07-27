@@ -3,34 +3,16 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListCreateAPIView
 from rest_framework import status
 from rest_framework.response import Response
-from discount.models import DiscountCode
-from core.permissions import IsSeller, NotAllowed, Allowed
+from core.permissions import IsSeller
+from discount.permissions import IsSellerOfProductPack
 from productpacks.models import ProductPack
 from django.shortcuts import get_object_or_404
 
 
-class DiscountCodeViewSet(ModelViewSet):
-    queryset = DiscountCode.objects.all()
-    permission_classes = [IsSeller]
-    serializer_class = DiscountCodeSerializer
-
 
 class ProductDiscountView(ListCreateAPIView):
-    permission_classes = [IsSeller]
+    permission_classes = [IsSeller, IsSellerOfProductPack]
     serializer_class = ProductDiscountSerializer
-
-    def get_permissions(self):
-        product_pack = ProductPack.objects.get(sku=self.kwargs["product_pack_sku"])
-        pack_shop = product_pack.shop
-        pack_shopstafs = pack_shop.shopstafs.all()
-        user = self.request.user
-        user_shopstafs = user.shopstafs.all()
-        intersection = pack_shopstafs & user_shopstafs
-        if not pack_shopstafs or not user_shopstafs or not intersection:
-            self.permission_classes.append(NotAllowed)
-        else:
-            self.permission_classes.append(Allowed)
-        return super(ProductDiscountView, self).get_permissions()
 
     def list(self, request, product_pack_sku):
         product_pack = get_object_or_404(ProductPack, sku=product_pack_sku)
