@@ -15,7 +15,6 @@ class IsCustomer(BasePermission):
 
 class IsSeller(BasePermission):
     def has_permission(self, request, view):
-        import pdb;pdb.set_trace()
         user = request.user
         if user.is_anonymous:
             boolean = False

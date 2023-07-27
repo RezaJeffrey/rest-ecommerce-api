@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericRelation
 from datetimemixin.models import DateTimeMixin
 from productpacks.models import ProductPack
 from blacklists.models import Blacklist
@@ -16,13 +17,7 @@ class ProductDiscount(DateTimeMixin):
      discount_code = models.ForeignKey(DiscountCode, on_delete=models.CASCADE, related_name="product_discounts")
      new_price = models.DecimalField(decimal_places=2, max_digits=14)
      percent = models.PositiveIntegerField(default=0)
-     black_list = models.ForeignKey(
-         to=Blacklist,
-         on_delete=models.DO_NOTHING,
-         blank=True,
-         null=True,
-         related_name="codes"
-     )
+     black_list = GenericRelation(Blacklist, related_query_name='discount')
      sku = models.CharField(max_length=255, blank=True, null=True)
 
 
@@ -32,4 +27,4 @@ class ProductDiscount(DateTimeMixin):
          return super(ProductDiscount, self).save(*args, **kwargs)
 
      def __str__(self):
-         return f'{self.product.name} -p {self.percent}%'
+         return f'{self.product_pack.product.name} -p {self.percent}%'
