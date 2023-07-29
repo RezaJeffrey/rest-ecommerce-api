@@ -20,6 +20,10 @@ class ProductDiscount(DateTimeMixin):
      black_list = GenericRelation(Blacklist, related_query_name='discount')
      sku = models.CharField(max_length=255, blank=True, null=True)
 
+     class Meta:
+          unique_together = [
+               "product_pack", "discount_code"
+          ]
 
      def save(self, *args, **kwargs):
          if not self.sku:
