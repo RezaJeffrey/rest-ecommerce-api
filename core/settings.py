@@ -1,10 +1,11 @@
 from pathlib import Path
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 import environ
 import os
 from dotenv import load_dotenv, find_dotenv
 from pathlib import Path
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -190,4 +191,17 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+# Celery Settings
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+
+# Scheduled Celery Beat Settings
+CELERY_BEAT_SCHEDULE = {
+    "task_one": {
+        "task": "discount.tasks.expiring_expired_product_discount_code",
+        # "schedule": crontab(minute="00, 59", hour="12, 23",),
+        "schedule": crontab(minute="00, 59", hour="12, 23"),
+    }
 }
