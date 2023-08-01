@@ -44,6 +44,7 @@ class CartItem(DateTimeMixin):
         blank=False,
         related_name='cart_items'
     )
+    price = models.DecimalField(decimal_places=2, max_digits=14, blank=False, null=True)
     quantity = models.PositiveIntegerField(
         blank=False,
         default=1,

@@ -12,7 +12,6 @@ class GetShopsPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):
         queryset = super(GetShopsPrimaryKeyRelatedField, self).get_queryset()
         if not request or not queryset:
             return None
-        import pdb;pdb.set_trace()
 
 class ProductPackCreateSerializer(serializers.ModelSerializer):
     product = serializers.PrimaryKeyRelatedField(
@@ -36,10 +35,6 @@ class ProductPackCreateSerializer(serializers.ModelSerializer):
             'stock', 'price',
             'shop'
         ]
-
-    def validate(self, attrs):
-        import pdb;pdb.set_trace()
-        valid_shops = self.context['request'].user.shopstafs.all()
 
 
     def create(self, validated_data):

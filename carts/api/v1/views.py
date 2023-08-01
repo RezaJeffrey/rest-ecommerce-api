@@ -95,9 +95,15 @@ class CartItemLView(ListAPIView):
 class CartItemCView(CreateAPIView):
     serializer_class = CartItemCreateSerializer
 
+    def get_serializer_context(self, *args, **kwargs):
+        product_pack_sku = self.kwargs["product_pack_sku"]
+        context = super(CartItemCView, self).get_serializer_context()
+        context.update({"product_pack_sku": product_pack_sku})
+        return context
+
     def create(self, request, product_pack_sku):
         payload = request.data
-        serializer = self.serializer_class(data=payload)
+        serializer = self.serializer_class(data=payload, context=self.get_serializer_context())
         user = request.user
         cart_sku = user.cart.sku
         if serializer.is_valid():
