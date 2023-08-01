@@ -202,6 +202,6 @@ CELERY_BEAT_SCHEDULE = {
     "task_one": {
         "task": "discount.tasks.expiring_expired_product_discount_code",
         "schedule": crontab(minute="00, 59", hour="12, 23",),
-        # 'schedule': 15,
+        # 'schedule': 0,
     }
 }
