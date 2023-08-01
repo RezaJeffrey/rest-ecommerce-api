@@ -33,11 +33,10 @@ class ProductViewSet(ModelViewSet):
             permission_class = [permissions.IsAuthenticated]
         return [permission() for permission in permission_class]
 
-    def retrieve(self, request, pk=None, product_sku=None, *args, **kwargs):
+    def retrieve(self, request, *args, **kwargs):
         queryset = get_object_or_404(
             Product,
-            pk=pk,
-            sku=product_sku
+            sku=kwargs['sku']
         )
         serializer = self.get_serializer(instance=queryset, many=False)
         response = {

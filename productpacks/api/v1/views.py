@@ -60,6 +60,23 @@ class ProductPackViewSet(ModelViewSet):
             status=code
         )
 
+    def update(self, request, sku=None):
+        item = get_object_or_404(self.queryset, sku=sku)
+        serializer = self.get_serializer(item)
+        serializer.update(
+            validated_data=serializer.validated_data
+        )
+        response = {
+            "data": serializer.data,
+            "message": "updated"
+        }
+        code = status.HTTP_201_CREATED
+
+        return Response(
+            data=response,
+            status=code
+        )
+
     def list(self, request):
         queryset = self.queryset.order_by('-id')
         serializer = self.get_serializer(queryset, many=True)

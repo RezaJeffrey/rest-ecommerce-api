@@ -1,10 +1,17 @@
 from rest_framework import serializers
 from products.models import Product
+from shops.models import Shop
 from extra_fields.models import ExtraFieldValue
 from productpacks.models import ProductPack
 from products.api.v1.serializer import ProductSerializer
 from extra_fields.api.v1.serializer import ExtraFieldSerializer
 
+class GetShopsPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):
+    def get_queryset(self):
+        request = self.context.get("request", None)
+        queryset = super(GetShopsPrimaryKeyRelatedField, self).get_queryset()
+        if not request or not queryset:
+            return None
 
 class ProductPackCreateSerializer(serializers.ModelSerializer):
     product = serializers.PrimaryKeyRelatedField(
@@ -15,14 +22,20 @@ class ProductPackCreateSerializer(serializers.ModelSerializer):
         many=True,
         queryset=ExtraFieldValue.objects.all()
     )
+    shop = GetShopsPrimaryKeyRelatedField(
+        many=True,
+        queryset=Shop.objects.all()
+    )
 
     class Meta:
         model = ProductPack
         fields = [
             'product',
             'extra_field_values',
-            'stock', 'price'
+            'stock', 'price',
+            'shop'
         ]
+
 
     def create(self, validated_data):
         product_pack = ProductPack.objects.create(
@@ -32,6 +45,14 @@ class ProductPackCreateSerializer(serializers.ModelSerializer):
         )
         product_pack.extra_field_values.set(validated_data['extra_field_values'])
         return product_pack
+
+    def update(self, instance, validated_data):
+        instance.product = validated_data.get('product', instance.product)
+        instance.extra_field_values = validated_data.get('extra_field_values', instance.extra_field_values)
+        instance.stock = validated_data.get('stock', instance.stock)
+        instance.price = validated_data.get('price', instance.price)
+        instance.save()
+        return instance
 
 
 class ListProductPacksSerializer(serializers.ModelSerializer):
@@ -53,7 +74,6 @@ class UpdateValueSerializer(serializers.ModelSerializer):
         model = ProductPack
         fields = []
 
-    # TODO BUG
     def update(self):
         product_pack = ProductPack.objects.get(
             sku=self.context['product_pack_sku']

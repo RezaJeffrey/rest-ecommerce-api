@@ -43,8 +43,8 @@ class Shop(DateTimeMixin):
 
 
 class ShopStaf(DateTimeMixin):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    shop = models.ForeignKey(Shop, related_name="shopstaf", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="shopstafs", on_delete=models.CASCADE)
+    shop = models.ForeignKey(Shop, related_name="shopstafs", on_delete=models.CASCADE)
     is_owner = models.BooleanField(default=False)
     sku = models.CharField(
         max_length=255,
@@ -58,4 +58,4 @@ class ShopStaf(DateTimeMixin):
         return super(ShopStaf, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.user.username}  : {self.shop.name}"
+        return f"{self.user.username}  -- > staf_of: {self.shop.name}"

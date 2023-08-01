@@ -1,19 +1,23 @@
 from pathlib import Path
-from datetime import timedelta
+from datetime import timedelta, datetime
+
 import environ
 import os
+from dotenv import load_dotenv, find_dotenv
+from pathlib import Path
+from celery.schedules import crontab
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # read .env file
-env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+path = Path('docs/github/.env')
+load_dotenv(dotenv_path=path)
 
-SECRET_KEY = env.str('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG')
+DEBUG = os.getenv('DEBUG')
 
 SITE_ID = 1
 
@@ -49,6 +53,7 @@ INSTALLED_APPS = [
     'address',
     'orders',
     'discount',
+    'blacklists'
 ]
 
 MIDDLEWARE = [
@@ -90,11 +95,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env.str('DB_NAME'),
-        'USER': env.str('DB_USER'),
-        'PASSWORD': env.str('DB_PASSWORD'),
-        'HOST': env.str('DB_HOST'),
-        'PORT': env.str('DB_PORT'),
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
@@ -186,4 +191,17 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+# Celery Settings
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+
+# Scheduled Celery Beat Settings
+CELERY_BEAT_SCHEDULE = {
+    "task_one": {
+        "task": "discount.tasks.expiring_expired_product_discount_code",
+        "schedule": crontab(minute="00, 59", hour="12, 23",),
+        # 'schedule': 15,
+    }
 }

@@ -35,14 +35,15 @@ class OrderCreateUpdateSerializer(serializers.ModelSerializer):
         fields = [
             'address', 'payment_method',
         ]
+    # TODO [BUG]bug here (anony user has no attr address)
 
-    def get_fields(self):
-        user = self.context['user']
-        fields = super(OrderCreateUpdateSerializer, self).get_fields()
-        fields['address'] = serializers.PrimaryKeyRelatedField(
-            queryset=user.addresses.all()
-        )
-        return fields
+    # def get_fields(self):
+    #     user = self.context['user']
+    #     fields = super(OrderCreateUpdateSerializer, self).get_fields()
+    #     fields['address'] = serializers.PrimaryKeyRelatedField(
+    #         queryset=user.addresses.all()
+    #     )
+    #     return fields
 
     def create(self, user, **validated_data):
         order_cart = user.cart

@@ -24,8 +24,11 @@ class ExtraFieldSerializer(serializers.ModelSerializer):
         fields = ['field_name', 'value']
 
     def create(self, **validated_data):
-
+        field_name = ExtraFieldName.objects.create(
+            name = validated_data.pop("field_name")["name"]
+        )
         field_value = ExtraFieldValue.objects.create(
+            field_name = field_name,
             **validated_data
         )
         return field_value

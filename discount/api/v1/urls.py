@@ -1,11 +1,15 @@
-from django.urls import path, include
+from django.urls import path
 from rest_framework.routers import DefaultRouter
-from .views import DiscountCodeViewSet
+from .views import ProductListAndCreateDiscountView, ProductRetrieveUpdateDestroyDiscountView
 
 router = DefaultRouter()
-router.register(r'discountcode', DiscountCodeViewSet, basename='discountcode')
 
-app_name = 'dsicount'
+app_name = "discount"
+
 urlpatterns = [
-    path('', include(router.urls))
-]
+    path("discount_code/<str:product_pack_sku>/", ProductListAndCreateDiscountView.as_view(), name="product_discount_lc"),
+    path("discount_code/<str:product_pack_sku>/<str:discount_code_sku>/", ProductRetrieveUpdateDestroyDiscountView.as_view(), name="product_discount_rud")
+] + router.urls
+
+
+

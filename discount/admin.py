@@ -1,4 +1,6 @@
 from django.contrib import admin
-import discount.models as models
+from .models import ProductDiscount, DiscountCode
 
-admin.site.register(models.DiscountCode)
+admin.site.register(DiscountCode)
+admin.site.register(ProductDiscount)
+
