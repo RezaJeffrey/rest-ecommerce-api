@@ -9,7 +9,7 @@ from carts.api.v1.serializers import(
     CartSerializer, CartCreateSerializer,
     CartItemSerializer, CartItemCreateSerializer
 )
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
@@ -43,6 +43,7 @@ class CartCreateView(CreateAPIView):
 
 
 class CartView(RetrieveAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
     serializer_class = CartSerializer
 
     def get_object(self):
