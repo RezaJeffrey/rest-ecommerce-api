@@ -1,5 +1,5 @@
 from rest_framework.generics import (
-    RetrieveUpdateDestroyAPIView,
+    RetrieveDestroyAPIView,
     ListAPIView,
     RetrieveAPIView,
     CreateAPIView
@@ -12,10 +12,11 @@ from carts.api.v1.serializers import(
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from carts.permission import IsCartBelongsToUser
+from carts.permission import IsCartBelongsToUser, IsUserDoesNotHaveCart
 
 
 class CartCreateView(CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsUserDoesNotHaveCart]
     serializer_class = CartCreateSerializer
 
     def create(self, request):
@@ -132,8 +133,8 @@ class CartItemCView(CreateAPIView):
         )
 
 # TO DO
-class CartItemRUDView(RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated, IsCartBelongsToUser]
+class CartItemRDView(RetrieveDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated]
     serializer_class = CartItemSerializer
     lookup_field = 'sku'
 
@@ -150,14 +151,9 @@ class CartItemRUDView(RetrieveUpdateDestroyAPIView):
             status=status.HTTP_200_OK
         )
 
-    def update(self, request, *args, **kwargs):
-        return Response(
-            data={},
-            status=status.HTTP_200_OK
-        )
-
     def destroy(self, request, *args, **kwargs):
+        queryset = self.get_object(*args, **kwargs)
+        queryset.delete()
         return Response(
-            data={},
-            status=status.HTTP_200_OK
+            status=status.HTTP_204_NO_CONTENT
         )

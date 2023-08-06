@@ -16,17 +16,6 @@ class CartCreateSerializer(serializers.ModelSerializer):
         return Cart.objects.create(user=user, **validated_data)
 
 
-class CartSerializer(serializers.ModelSerializer):
-    user = UserSerializer(many=False)
-    class Meta:
-        model = Cart
-        fields = [
-            "created_time",
-            "updated_time",
-            "user"
-        ]
-
-
 class CartItemSerializer(serializers.ModelSerializer):
     item = ListProductPacksSerializer(many=False)
     class Meta:
@@ -37,8 +26,21 @@ class CartItemSerializer(serializers.ModelSerializer):
                 ]
 
 
+class CartSerializer(serializers.ModelSerializer):
+    user = UserSerializer(many=False)
+    items = CartItemSerializer(many=True)
+
+    class Meta:
+        model = Cart
+        fields = [
+            "created_time",
+            "updated_time",
+            "user",
+            "items"
+        ]
+
 class CartItemCreateSerializer(serializers.ModelSerializer):
-    discount_code = serializers.CharField(max_length=30)
+    discount_code = serializers.CharField(max_length=30, required=False, default="")
     price = serializers.HiddenField(default = 0)
     class Meta:
         model = CartItem
