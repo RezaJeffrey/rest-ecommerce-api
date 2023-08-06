@@ -6,7 +6,7 @@ from rest_framework.decorators import action
 from category.models import Category
 from rest_framework import status
 from .serializers import CategorySerializer, CategoryCreateSerializer
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -14,12 +14,14 @@ class CategoryViewSet(viewsets.ModelViewSet):
     A simple ViewSet for viewing and editing categories.
     """
     queryset = Category.objects.all()
+    lookup_field = "sku"
+    lookup_url_kwarg = "sku"
 
     def get_permissions(self):
-        if not self.action == 'list':
+        if not self.action == 'list' and not self.action == 'search' and not self.action == "retrieve":
             permission_class = [IsAdminUser]
         else:
-            permission_class = []
+            permission_class = [AllowAny]
         return [permission() for permission in permission_class]
 
     def get_serializer_class(self):
@@ -39,6 +41,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
 
     @action(detail=False, methods=['GET'])
     def search(self, request, *args, **kwargs):
