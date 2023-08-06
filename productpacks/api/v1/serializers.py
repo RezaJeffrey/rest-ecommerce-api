@@ -62,7 +62,7 @@ class ListProductPacksSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductPack
         fields = [
-            'id', 'sku',
+            'id',
             'product',
             'extra_field_values',
             'stock', 'price'
