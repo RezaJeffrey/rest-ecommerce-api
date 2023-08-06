@@ -12,6 +12,7 @@ from carts.api.v1.serializers import(
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
+from carts.permission import IsCartBelongsToUser
 
 
 class CartCreateView(CreateAPIView):
@@ -68,6 +69,7 @@ class CartView(RetrieveAPIView):
 
 
 class CartItemLView(ListAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
     serializer_class = CartItemSerializer
 
     def get_queryset(self):
@@ -94,6 +96,7 @@ class CartItemLView(ListAPIView):
 
 
 class CartItemCView(CreateAPIView):
+    permission_classes = [permissions.IsAuthenticated,]
     serializer_class = CartItemCreateSerializer
 
     def get_serializer_context(self, *args, **kwargs):
@@ -130,18 +133,31 @@ class CartItemCView(CreateAPIView):
 
 # TO DO
 class CartItemRUDView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [permissions.IsAuthenticated, IsCartBelongsToUser]
     serializer_class = CartItemSerializer
     lookup_field = 'sku'
 
-    def get_object(self):
-        import pdb;
-        pdb.set_trace()
+    def get_object(self, *args, **kwargs):
+        return get_object_or_404(CartItem, sku=kwargs["cart_item_sku"])
 
     def retrieve(self, request, *args, **kwargs):
-        pass
+        queryset = self.get_object(*args, **kwargs)
+        serializer = self.serializer_class(instance=queryset, many=False)
+        return Response(
+            data={
+                "data": serializer.data
+            },
+            status=status.HTTP_200_OK
+        )
 
     def update(self, request, *args, **kwargs):
-        pass
+        return Response(
+            data={},
+            status=status.HTTP_200_OK
+        )
 
     def destroy(self, request, *args, **kwargs):
-        pass
+        return Response(
+            data={},
+            status=status.HTTP_200_OK
+        )

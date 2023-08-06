@@ -7,7 +7,8 @@ class CartItemInline(admin.StackedInline):
     model = CartItem
     fields = [
         'cart', 'item',
-        'quantity', 'price'
+        'quantity', 'price',
+        'sku'
     ]
 
 

@@ -4,6 +4,7 @@ from productpacks.models import ProductPack
 from discount.models import DiscountCode
 from django.shortcuts import get_object_or_404
 from users.api.v1.serializers import UserSerializer
+from productpacks.api.v1.serializers import ListProductPacksSerializer
 
 
 class CartCreateSerializer(serializers.ModelSerializer):
@@ -27,9 +28,13 @@ class CartSerializer(serializers.ModelSerializer):
 
 
 class CartItemSerializer(serializers.ModelSerializer):
+    item = ListProductPacksSerializer(many=False)
     class Meta:
         model = CartItem
-        fields = ['item', 'quantity']
+        fields = ['item', 
+                  'quantity',
+                  "price"
+                ]
 
 
 class CartItemCreateSerializer(serializers.ModelSerializer):
