@@ -127,7 +127,7 @@ class CartItemCView(CreateAPIView):
             status=code
         )
 
-
+# TO DO
 class CartItemRUDView(RetrieveUpdateDestroyAPIView):
     serializer_class = CartItemSerializer
     lookup_field = 'sku'

@@ -171,12 +171,13 @@ SIMPLE_JWT = {
 
     'ALGORITHM': 'HS256',
     'VERIFYING_KEY': None,
+    'SIGNING_KEY': os.getenv("SECRET_KEY"), 
     'AUDIENCE': None,
     'ISSUER': None,
     'JWK_URL': None,
     'LEEWAY': 0,
 
-    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_TYPES': ('Bearer', 'KWT'),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
@@ -202,6 +203,6 @@ CELERY_BEAT_SCHEDULE = {
     "task_one": {
         "task": "discount.tasks.expiring_expired_product_discount_code",
         "schedule": crontab(minute="00, 59", hour="12, 23",),
-        # 'schedule': 15,
+        # 'schedule': 0,
     }
 }

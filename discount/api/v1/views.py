@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404
 
 
 class ProductListAndCreateDiscountView(ListCreateAPIView):
-    # permission_classes = [IsSeller, IsSellerOfProductPack]
+    permission_classes = [IsSeller, IsSellerOfProductPack]
 
     def get_serializer_class(self, *args, **kwargs):
         if self.request.method == "POST":
@@ -58,7 +58,7 @@ class ProductListAndCreateDiscountView(ListCreateAPIView):
 
 
 class ProductRetrieveUpdateDestroyDiscountView(RetrieveUpdateDestroyAPIView):
-    # permission_classes = [IsSeller, IsSellerOfProductPack]
+    permission_classes = [IsSeller, IsSellerOfProductPack]
 
     def get_serializer_class(self, *args, **kwargs):
         if self.request.method == "GET":
