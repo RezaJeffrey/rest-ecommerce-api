@@ -6,15 +6,38 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from rest_framework.response import Response
 # .files import
-from users.api.v1.serializers import (MyTokenObtainPairSerializer, ChangePasswordSerializer, UserProfileSerializer)
+from users.api.v1.serializers import (MyTokenObtainPairSerializer, ChangePasswordSerializer, UserProfileSerializer, UserRegisterationSerializer)
+from django.contrib.auth import authenticate
 
 # user
 User = get_user_model()
 
+class UserRegisterView(generics.CreateAPIView):
+    serializer_class = UserRegisterationSerializer
+    def create(self, request, *args, **kwargs):
+        payload = request.data
+        serializer = self.serializer_class(data=payload)
+        if serializer.is_valid():
+            serializer.create(serializer.validated_data)
+            response = {
+                "message": "user registered successfully!",
+                "data": serializer.data
+            }
+            code = status.HTTP_201_CREATED
+        else:
+            response = {
+                "message": "something went wrong!",
+                "error": serializer.errors
+            }
+            code = status.HTTP_406_NOT_ACCEPTABLE
+        return Response(
+            data=response,
+            status=code
+        )
+
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
-
 
 class ChangePasswordView(generics.UpdateAPIView):
     queryset = User.objects.all()

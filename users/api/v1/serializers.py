@@ -11,6 +11,35 @@ class UserSerializer(serializers.ModelSerializer):
             "username",
         ]
 
+class UserRegisterationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "username",
+            "password",
+            "first_name",
+            "last_name",
+            "email",
+            "phone_number",
+            "national_code",
+            "role"
+        ]
+        extra_kwargs = {
+            "password": {
+                "write_only": True,
+                "style": {
+                    "input_type": "password"
+                } 
+            }
+        }
+    
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            **validated_data
+        )
+        user.is_active = True
+        return user
+
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
