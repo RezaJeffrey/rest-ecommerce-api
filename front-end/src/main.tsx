@@ -4,6 +4,8 @@ import { ChakraProvider, ColorModeScript, Switch } from "@chakra-ui/react";
 import theme from "./theme.tsx";
 import App from "./App.tsx";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./Login/Login.tsx";
+import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -12,6 +14,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />} />
+          <Route path="/users/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>
