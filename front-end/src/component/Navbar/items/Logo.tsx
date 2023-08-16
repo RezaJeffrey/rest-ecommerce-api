@@ -1,5 +1,5 @@
-import logo_dark from "../../assets/default-monochrome-white.svg";
-import logo_light from "../../assets/default-monochrome-black.svg";
+import logo_dark from "../../../assets/default-monochrome-white.svg";
+import logo_light from "../../../assets/default-monochrome-black.svg";
 import { useColorMode } from "@chakra-ui/react";
 import { Image } from "@chakra-ui/react";
 

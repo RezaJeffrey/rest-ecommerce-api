@@ -5,7 +5,6 @@ import {
   FormHelperText,
   FormLabel,
   Input,
-  useColorMode,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
