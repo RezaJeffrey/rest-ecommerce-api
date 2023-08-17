@@ -11,7 +11,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Navbar from "../../Navbar/Navbar";
 import { useState } from "react";
-import AuthService, { schema, loginFormData } from "../service/auth_service";
+import { loginUser, loginSchema, loginFormData } from "../service/auth_service";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -19,12 +20,14 @@ function Login() {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<loginFormData>({ resolver: zodResolver(schema) });
+  } = useForm<loginFormData>({ resolver: zodResolver(loginSchema) });
+  const navigate = useNavigate();
   const handleLogin = (data: loginFormData) => {
-    const res = AuthService.loginUser(data);
+    const res = loginUser(data);
     res
       .then(() => {
         setErrorMessage(null);
+        navigate("/", { replace: true });
       })
       .catch((err) => {
         setErrorMessage(err.response.data.detail);
