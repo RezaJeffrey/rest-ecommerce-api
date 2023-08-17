@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./component/Authentications/Login/Login.tsx";
 import "./index.css";
 import Signup from "./component/Authentications/Signup/Signup.tsx";
+import Profile from "./component/Authentications/Profile/Profile.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -17,6 +18,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path="/" element={<App />} />
           <Route path="/users/login" element={<Login />} />
           <Route path="/users/signup" element={<Signup />} />
+          <Route path="/users/profile" element={<Profile />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

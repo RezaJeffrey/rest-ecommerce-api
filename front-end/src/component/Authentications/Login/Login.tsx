@@ -27,7 +27,7 @@ function Login() {
     res
       .then(() => {
         setErrorMessage(null);
-        navigate("/", { replace: true });
+        navigate("/users/profile", { replace: true });
       })
       .catch((err) => {
         setErrorMessage(err.response.data.detail);

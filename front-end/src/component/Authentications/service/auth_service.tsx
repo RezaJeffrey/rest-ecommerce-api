@@ -40,7 +40,7 @@ const loginUser = (data: loginFormData) => {
     const refresh = res.data.refresh;
     localStorage.setItem(ACCESS_TOKEN, access);
     localStorage.setItem(REFRESH_TOKEN, refresh);
-    axiosInstance.defaults.headers.Authorization = `Barear ${window.localStorage.getItem(
+    axiosInstance.defaults.headers.Authorization = `Bearer ${window.localStorage.getItem(
       ACCESS_TOKEN
     )}`;
   });
@@ -51,4 +51,17 @@ const signupUser = (data: singupFormData) => {
   const res = axiosInstance.post("users/api/v1/register/", data);
   return res;
 };
-export { loginUser, signupUser };
+
+const getUserProfile = () => {
+  const controller = new AbortController();
+  const res = axiosInstance.get("users/api/v1/profile/", {
+    signal: controller.signal,
+  });
+  return {
+    res,
+    cancel: () => {
+      controller.abort();
+    },
+  };
+};
+export { loginUser, signupUser, getUserProfile };
