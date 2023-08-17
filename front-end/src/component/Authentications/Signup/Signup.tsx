@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Navbar from "../Navbar/Navbar";
+import Navbar from "../../Navbar/Navbar";
 import {
   FormControl,
   FormLabel,
