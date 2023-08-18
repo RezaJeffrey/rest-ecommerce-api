@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { getUserProfile } from "../service/auth_service";
-import { AxiosResponse } from "axios";
+import { getUserProfile, refreshToken } from "../service/auth_service";
 import Navbar from "../../Navbar/Navbar";
 import { Box, Button, Text } from "@chakra-ui/react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 interface User {
   username: string;
@@ -14,6 +13,7 @@ interface User {
 function Profile() {
   const [user, setUser] = useState<User>();
   const [isAuth, setIsAuth] = useState(false);
+  const [repeat, setRepeat] = useState(0);
   const navigate = useNavigate();
   useEffect(() => {
     const { res, cancel } = getUserProfile();
@@ -24,11 +24,16 @@ function Profile() {
         console.log(data.data.profile);
       })
       .catch((err) => {
-        setIsAuth(false);
-        console.log(err);
+        if (err.response.status === 401 && !repeat) {
+          refreshToken();
+          setRepeat(1);
+        } else {
+          setIsAuth(false);
+          console.log(err);
+        }
       });
     return () => cancel();
-  }, []);
+  }, [repeat]);
   const handleClick = () => {
     navigate("/users/login/", { replace: true });
   };

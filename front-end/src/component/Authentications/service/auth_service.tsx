@@ -64,4 +64,26 @@ const getUserProfile = () => {
     },
   };
 };
-export { loginUser, signupUser, getUserProfile };
+
+const refreshToken = () => {
+  const data = {
+    refresh: localStorage.getItem(REFRESH_TOKEN),
+  };
+  console.log(data);
+  const res = axiosInstance
+    .post("users/api/v1/token/refresh/", data)
+    .then((data) => {
+      console.log(data);
+      const access = data.data.access;
+      const refresh = data.data.refresh;
+      localStorage.setItem(ACCESS_TOKEN, access);
+      localStorage.setItem(REFRESH_TOKEN, refresh);
+      location.reload();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  return res;
+};
+
+export { loginUser, signupUser, getUserProfile, refreshToken };
