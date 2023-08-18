@@ -69,7 +69,6 @@ const refreshToken = () => {
   const data = {
     refresh: localStorage.getItem(REFRESH_TOKEN),
   };
-  console.log(data);
   const res = axiosInstance
     .post("users/api/v1/token/refresh/", data)
     .then((data) => {
@@ -86,4 +85,15 @@ const refreshToken = () => {
   return res;
 };
 
-export { loginUser, signupUser, getUserProfile, refreshToken };
+const logoutUser = () => {
+  const data = {
+    refresh: localStorage.getItem(REFRESH_TOKEN),
+  };
+  const res = axiosInstance.post("users/api/v1/logout/", data).then(() => {
+    localStorage.removeItem(ACCESS_TOKEN);
+    localStorage.removeItem(REFRESH_TOKEN);
+  });
+  return res;
+};
+
+export { loginUser, signupUser, getUserProfile, refreshToken, logoutUser };
