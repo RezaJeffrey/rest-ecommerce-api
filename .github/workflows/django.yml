@@ -51,7 +51,7 @@ jobs:
 
       - name: Move configuration file
         run: |
-          cp back-end/docs/github/.env .
+          cp ./back-end/docs/github/.env .
   
       - name: Run migrations
         run: | 
