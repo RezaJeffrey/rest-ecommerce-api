@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   FormControl,
@@ -8,34 +9,39 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import Navbar from "../Navbar/Navbar";
-
-const schema = z.object({
-  username: z
-    .string({
-      invalid_type_error: "username field is required!",
-    })
-    .min(1),
-  password: z
-    .string({
-      invalid_type_error: "password field is required!",
-    })
-    .min(1),
-});
-
-type formData = z.infer<typeof schema>;
+import Navbar from "../../Navbar/Navbar";
+import { useContext, useState } from "react";
+import { loginUser, loginSchema, loginFormData } from "../service/auth_service";
+import { useNavigate } from "react-router-dom";
+import { userContext } from "../../../context/userContext";
 
 function Login() {
+  const { setUser } = useContext(userContext);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
     formState: { errors, isValid },
-  } = useForm<formData>({ resolver: zodResolver(schema) });
+  } = useForm<loginFormData>({ resolver: zodResolver(loginSchema) });
+  const navigate = useNavigate();
+  const handleLogin = (data: loginFormData) => {
+    const res = loginUser(data);
+    res
+      .then(() => {
+        setErrorMessage(null);
+        setUser({ username: data.username });
+        navigate("/users/profile", { replace: true });
+      })
+      .catch((err) => {
+        setErrorMessage(err.response.data.detail);
+        console.log(errorMessage);
+      });
+  };
   return (
     <>
       <Navbar />
-      <form onSubmit={handleSubmit((data) => console.log(data))}>
+      {errorMessage && <Alert status="error">{errorMessage}</Alert>}
+      <form onSubmit={handleSubmit((data) => handleLogin(data))}>
         <FormControl>
           <FormLabel>username</FormLabel>
           <Input {...register("username")} />

@@ -4,11 +4,13 @@ from rest_framework import permissions
 from products.models import Product
 from extra_fields.models import ExtraFieldValue
 from comments.api.v1.serializer import CreateCommentSerializer, CommentSerializer
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
+from .serializer import ProductImageCreateSerializer
+from core.permissions import IsSeller
 
 
 # TODO [BUG] drf-yasg occurs to bug cause of this viewset and most probably the serializer
@@ -48,6 +50,27 @@ class ProductViewSet(ModelViewSet):
             status=code
         )
 
+class AddProductImageView(generics.CreateAPIView):
+    permission_classes = [IsSeller]
+    serializer_class = ProductImageCreateSerializer
+
+    def post(self, request, *args, **kwargs):
+        payload = request.data
+        serializer = self.serializer_class(data=payload)
+        if serializer.is_valid():
+            serializer.create(serializer.validated_data)
+            response = {
+                "message": "image added successfully!",
+                "data": serializer.data
+            }
+            code = status.HTTP_201_CREATED
+        else:
+            response = {
+                "message": "something went wrong!",
+                "error": serializer.errors
+            }
+            code = status.HTTP_403_FORBIDDEN
+        return Response(data=response, status=code)
 
 class AddLikeProduct(APIView):
     permission_classes = [IsAuthenticated]
