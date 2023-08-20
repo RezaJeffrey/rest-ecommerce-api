@@ -51,16 +51,16 @@ jobs:
 
       - name: Move configuration file
         run: |
-          cp docs/github/.env .
-
+          cp back-end/docs/github/.env .
+  
       - name: Run migrations
         run: | 
-          python manage.py migrate users
-          python manage.py migrate
+          python ./back-end/manage.py migrate users
+          python ./back-end/manage.py migrate
 
       - name: Run Tests
         run: |
-          coverage run manage.py test --settings=core.settings
+          coverage run ./back-end/manage.py test --settings=core.settings
 
       - name: Coveralls
         run: coveralls --service=github
