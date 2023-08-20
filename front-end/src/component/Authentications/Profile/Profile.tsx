@@ -21,7 +21,6 @@ function Profile() {
       .then((data) => {
         setUser(data.data.profile);
         setIsAuth(true);
-        console.log(data.data.profile);
       })
       .catch((err) => {
         if (err.response.status === 401 && !repeat) {
@@ -29,7 +28,6 @@ function Profile() {
           setRepeat(1);
         } else {
           setIsAuth(false);
-          console.log(err);
         }
       });
     return () => cancel();

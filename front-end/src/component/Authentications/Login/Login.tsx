@@ -10,11 +10,13 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Navbar from "../../Navbar/Navbar";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { loginUser, loginSchema, loginFormData } from "../service/auth_service";
 import { useNavigate } from "react-router-dom";
+import { userContext } from "../../../context/userContext";
 
 function Login() {
+  const { setUser } = useContext(userContext);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const {
     register,
@@ -27,6 +29,7 @@ function Login() {
     res
       .then(() => {
         setErrorMessage(null);
+        setUser({ username: data.username });
         navigate("/users/profile", { replace: true });
       })
       .catch((err) => {

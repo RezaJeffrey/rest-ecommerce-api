@@ -44,6 +44,7 @@ const loginUser = (data: loginFormData) => {
       ACCESS_TOKEN
     )}`;
   });
+
   return res;
 };
 
