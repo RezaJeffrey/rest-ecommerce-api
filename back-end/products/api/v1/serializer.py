@@ -6,6 +6,8 @@ from likes.api.v1.serializer import LikeSerializer
 from comments.api.v1.serializer import CommentSerializer
 from extra_fields.api.v1.serializer import ExtraFieldSerializer
 from django.shortcuts import get_object_or_404
+from brands.api.v1.serializer import BrandSerializer
+from category.api.v1.serializers import CategorySerializer
 
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,9 +29,8 @@ class ProductImageCreateSerializer(serializers.ModelSerializer):
         return ProductImage.objects.create(product=product, image=validated_data.get("image"), alt_text=validated_data.get("alt_text"))
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(
-        queryset=Category.objects.filter(child=None)
-    )
+    category = CategorySerializer(many=False)
+    brand = BrandSerializer(many=False)
     likes = LikeSerializer(many=True)
     comments = CommentSerializer(many=True)
     images = ProductImageSerializer(many=True)

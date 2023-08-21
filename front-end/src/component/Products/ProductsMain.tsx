@@ -11,7 +11,8 @@ function ProductsMain() {
       .catch((err) => {
         console.log(err);
       });
-    // return () => cancel();
+
+    return () => cancel();
   }, []);
   return <div>ProductsMain</div>;
 }
