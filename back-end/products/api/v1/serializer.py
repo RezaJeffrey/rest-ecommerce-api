@@ -8,6 +8,7 @@ from extra_fields.api.v1.serializer import ExtraFieldSerializer
 from django.shortcuts import get_object_or_404
 from brands.api.v1.serializer import BrandSerializer
 from category.api.v1.serializers import CategorySerializer
+from shops.api.v1.serializer import ShopSerializer
 
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,10 +35,12 @@ class ProductSerializer(serializers.ModelSerializer):
     likes = LikeSerializer(many=True)
     comments = CommentSerializer(many=True)
     images = ProductImageSerializer(many=True)
+    shop = ShopSerializer(many=True)
 
     class Meta:
         model = Product
         fields = [
+            "id",
             'name', 'category',
             'description', 'brand',
             'shop', 'images',
