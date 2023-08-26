@@ -49,6 +49,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductCreateSerializer(serializers.ModelSerializer):
+    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.filter(child=None))
     class Meta:
         model = Product
         fields = [

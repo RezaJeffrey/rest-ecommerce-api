@@ -28,7 +28,6 @@ export const useProducts = () => {
     const { res, cancel } = fetchProducts();
     res
       .then((data) => {
-        console.log(data);
         setProducts(data.data);
       })
       .catch((err) => {

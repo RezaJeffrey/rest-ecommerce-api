@@ -1,9 +1,9 @@
 import axiosInstance from "../../../api/axiosInstance";
-import { Product } from "../../../hooks/useProducts";
+import { Category } from "../../../hooks/useCategories";
 
-const fetchProducts = () => {
+const fetchCategories = () => {
   const controller = new AbortController();
-  const res = axiosInstance.get<Product[]>("/products/api/v1/product/", {
+  const res = axiosInstance.get<Category[]>("/categories/api/v1/category/", {
     signal: controller.signal,
     transformRequest: (data, headers) => {
       delete headers["Authorization"];
@@ -12,5 +12,4 @@ const fetchProducts = () => {
   });
   return { res, cancel: () => controller.abort() };
 };
-
-export { fetchProducts };
+export { fetchCategories };

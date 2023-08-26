@@ -4,7 +4,6 @@ import ProductCard from "./items/ProductCard";
 
 function ProductsMain() {
   const { products, error } = useProducts();
-  console.log(error);
   return (
     <>
       {error && <Text>{error}</Text>}

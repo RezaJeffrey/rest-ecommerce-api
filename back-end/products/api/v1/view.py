@@ -15,7 +15,6 @@ from core.permissions import IsSeller
 
 # TODO [BUG] drf-yasg occurs to bug cause of this viewset and most probably the serializer
 class ProductViewSet(ModelViewSet):
-
     serializer_class = ProductSerializer
     queryset = Product.objects.all()
     lookup_field = 'sku'
@@ -27,6 +26,7 @@ class ProductViewSet(ModelViewSet):
         else:
             serializer_class = ProductSerializer
         return serializer_class
+
 
     def get_permissions(self):
         if self.action == 'list' or self.action == 'retrieve':
