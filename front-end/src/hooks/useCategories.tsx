@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchCategories } from "../component/Sidebar/service/sidebar-services";
+import { fetchSideBarItems } from "../component/Sidebar/service/sidebar-services";
 
 export interface Category {
   id: number;
@@ -13,7 +13,9 @@ export const useCategories = () => {
   const [error, setError] = useState();
   const [categories, setCategories] = useState<Category[]>([]);
   useEffect(() => {
-    const { res, cancel } = fetchCategories();
+    const { res, cancel } = fetchSideBarItems<Category>(
+      "/categories/api/v1/category/"
+    );
     res
       .then((response) => {
         setCategories(response.data);

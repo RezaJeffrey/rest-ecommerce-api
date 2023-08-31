@@ -1,15 +1,16 @@
 import axiosInstance from "../../../api/axiosInstance";
 import { Product } from "../../../hooks/useProducts";
+import Brands from "../../Sidebar/items/Brands/Brands";
 
 export interface productFilters {
   categories: string[];
+  brands: string[];
 }
 
-const fetchProducts = ({ categories }: productFilters) => {
-  console.log(categories);
+const fetchProducts = ({ categories, brands }: productFilters) => {
   const paramObj = {
     categories: categories.join(", "),
-    prices: "13, 14, 15",
+    brands: brands.join(", "),
   };
   const params = new URLSearchParams(paramObj);
   const controller = new AbortController();
@@ -20,9 +21,6 @@ const fetchProducts = ({ categories }: productFilters) => {
       delete headers["Authorization"];
       return data;
     },
-  });
-  res.then(() => {
-    console.log(params);
   });
   return { res, cancel: () => controller.abort() };
 };

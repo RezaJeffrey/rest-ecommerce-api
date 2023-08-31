@@ -28,16 +28,20 @@ class ProductViewSet(ModelViewSet):
         params = parse_qs(queries["params"][0])
         category_param = params.get("categories")
         price_param = params.get("prices")
-        categories_tobe_filtered = []
-        prices_tobe_filtered = []
+        brand_param = params.get("brands")
+        categories_ToBe_filtered = []
+        prices_ToBe_filtered = []
+        brands_ToBe_filtered = []
         if category_param:
-            categories_tobe_filtered = category_param[0].split(", ")
+            categories_ToBe_filtered = category_param[0].split(", ")
         if price_param:
-            prices_tobe_filtered = price_param[0].split(", ") 
-        if not categories_tobe_filtered:
+            prices_ToBe_filtered = price_param[0].split(", ")
+        if brand_param:
+            brands_ToBe_filtered = brand_param[0].split(", ") 
+        if not categories_ToBe_filtered and not brands_ToBe_filtered:
             queryset = Product.objects.all()
         else:
-            queryset = Product.objects.filter(category__sku__in = categories_tobe_filtered)
+            queryset = Product.objects.filter(category__sku__in = categories_ToBe_filtered, brand__sku__in = brands_ToBe_filtered)
         return queryset
 
     def get_serializer_class(self):

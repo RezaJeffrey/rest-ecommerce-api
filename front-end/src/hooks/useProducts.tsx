@@ -31,12 +31,12 @@ export const useProducts = (filter: productFilters) => {
     const { res, cancel } = fetchProducts(filter);
     res
       .then((data) => {
-        console.log(data);
         setProducts(data.data);
       })
       .catch((err) => {
         if (err.response) {
           console.log(err.response.data);
+          setErrors(err.response.data);
         }
       });
     return () => cancel();

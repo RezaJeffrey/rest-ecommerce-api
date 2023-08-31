@@ -1,9 +1,8 @@
 import axiosInstance from "../../../api/axiosInstance";
-import { Category } from "../../../hooks/useCategories";
 
-const fetchCategories = () => {
+const fetchSideBarItems = <T,>(endpoint: string) => {
   const controller = new AbortController();
-  const res = axiosInstance.get<Category[]>("/categories/api/v1/category/", {
+  const res = axiosInstance.get<T[]>(endpoint, {
     signal: controller.signal,
     transformRequest: (data, headers) => {
       delete headers["Authorization"];
@@ -12,4 +11,5 @@ const fetchCategories = () => {
   });
   return { res, cancel: () => controller.abort() };
 };
-export { fetchCategories };
+
+export { fetchSideBarItems };

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Menu from "../Sidebar/items/Menu/Menu";
+import Menu from "../Menu/Menu";
 import { Checkbox, Flex, Stack } from "@chakra-ui/react";
 
 export interface categoryEventData {
@@ -19,7 +19,14 @@ interface SecondProb extends Prob {
   isChecked: boolean;
 }
 
-function NestedList({id, name, sku = "", child, handleCheck, isChecked}: SecondProb) {
+function NestedList({
+  id,
+  name,
+  sku = "",
+  child,
+  handleCheck,
+  isChecked,
+}: SecondProb) {
   const [isToggled, setIsToggled] = useState(false);
   return (
     <>
