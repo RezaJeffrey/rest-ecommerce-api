@@ -1,5 +1,11 @@
+import { useState } from "react";
 import Menu from "../Sidebar/items/Menu/Menu";
 import { Checkbox, Flex, Stack } from "@chakra-ui/react";
+
+export interface categoryEventData {
+  sku: string;
+  isChecked: boolean;
+}
 
 interface Prob {
   id?: number;
@@ -9,35 +15,54 @@ interface Prob {
 }
 
 interface SecondProb extends Prob {
-  handleCheck: (e: React.FocusEvent) => void;
+  handleCheck: (e: categoryEventData) => void;
+  isChecked: boolean;
 }
 
-function NestedList(prob: SecondProb) {
+function NestedList({id, name, sku = "", child, handleCheck, isChecked}: SecondProb) {
+  const [isToggled, setIsToggled] = useState(false);
   return (
     <>
-      {prob.child.length !== 0 ? (
-        <Menu name={prob.name} key={prob.id}>
-          {prob.child.map((obj) => (
-            <NestedList
-              child={obj.child}
-              name={obj.name}
-              id={obj.id}
-              sku={obj.sku}
-              handleCheck={prob.handleCheck}
-            />
-          ))}
-        </Menu>
+      {child.length !== 0 ? (
+        <Stack padding={5}>
+          <Menu name={name} key={id}>
+            {child.map((obj) => (
+              <NestedList
+                key={obj.id}
+                child={obj.child}
+                name={obj.name}
+                id={obj.id}
+                sku={obj.sku}
+                isChecked={isChecked}
+                handleCheck={handleCheck}
+              />
+            ))}
+          </Menu>
+        </Stack>
       ) : (
         <Stack spacing={1}>
           <Flex borderRadius="10px">
             <Checkbox
               size="md"
               border="10px"
-              onFocus={() => console.log(prob.sku)}
-              onChange={(e) => e.target.checked}
-              key={prob.id}
+              isChecked={isToggled}
+              onChange={() => {
+                setIsToggled(!isToggled);
+                handleCheck(
+                  isChecked
+                    ? {
+                        sku: sku,
+                        isChecked: isToggled,
+                      }
+                    : {
+                        sku: sku,
+                        isChecked: !isToggled,
+                      }
+                );
+              }}
+              key={id}
             >
-              {prob.name}
+              {name}
             </Checkbox>
           </Flex>
         </Stack>

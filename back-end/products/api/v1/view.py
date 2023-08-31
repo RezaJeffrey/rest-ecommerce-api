@@ -1,3 +1,6 @@
+from urllib.parse import urlparse
+from urllib.parse import parse_qs
+
 from rest_framework.viewsets import ModelViewSet
 from .serializer import ProductSerializer, ProductCreateSerializer, ExtraFieldSerializer
 from rest_framework import permissions
@@ -16,9 +19,26 @@ from core.permissions import IsSeller
 # TODO [BUG] drf-yasg occurs to bug cause of this viewset and most probably the serializer
 class ProductViewSet(ModelViewSet):
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
     lookup_field = 'sku'
     lookup_url_kwarg = 'sku'
+
+    def get_queryset(self, *args, **kwargs):
+        url = urlparse(self.request.get_full_path())
+        queries = parse_qs(url.query)
+        params = parse_qs(queries["params"][0])
+        category_param = params.get("categories")
+        price_param = params.get("prices")
+        categories_tobe_filtered = []
+        prices_tobe_filtered = []
+        if category_param:
+            categories_tobe_filtered = category_param[0].split(", ")
+        if price_param:
+            prices_tobe_filtered = price_param[0].split(", ") 
+        if not categories_tobe_filtered:
+            queryset = Product.objects.all()
+        else:
+            queryset = Product.objects.filter(category__sku__in = categories_tobe_filtered)
+        return queryset
 
     def get_serializer_class(self):
         if self.action == 'create':

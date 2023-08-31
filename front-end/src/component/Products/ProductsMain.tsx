@@ -1,9 +1,10 @@
 import { useProducts } from "../../hooks/useProducts";
 import { SimpleGrid, Text } from "@chakra-ui/react";
 import ProductCard from "./items/ProductCard";
+import { productFilters } from "./service/product_serivice";
 
-function ProductsMain() {
-  const { products, error } = useProducts();
+function ProductsMain(filters: productFilters) {
+  const { products, error } = useProducts(filters);
   return (
     <>
       {error && <Text>{error}</Text>}

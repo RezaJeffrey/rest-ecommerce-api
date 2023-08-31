@@ -1,20 +1,31 @@
 import { useCategories } from "../../../../hooks/useCategories";
 import { Text } from "@chakra-ui/react";
-import NestedList from "../../../NestedList/NestedList";
+import NestedList, { categoryEventData } from "../../../NestedList/NestedList";
 
-function Categories() {
+interface Prob {
+  handleCategory: (e: categoryEventData) => void;
+}
+
+function Categories({handleCategory} : Prob) {
   const { categories, error } = useCategories();
-  console.log(categories);
+
+  const handleChange = (e: categoryEventData) => {
+    handleCategory(e);
+  };
+
   return (
     <>
       {error && <Text>{error}</Text>}
-      {categories.length === 0 ? <Text>couldn't find any categories!</Text> :
-      <NestedList
-        child={categories}
-        name="categories"
-        handleCheck={(e) => console.log(e)}
-      />
-  }
+      {categories.length === 0 ? (
+        <Text>couldn't find any categories!</Text>
+      ) : (
+        <NestedList
+          child={categories}
+          isChecked={false}
+          name="categories"
+          handleCheck={(e) => handleChange(e)}
+        />
+      )}
     </>
   );
 }

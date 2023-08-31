@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { fetchProducts } from "../component/Products/service/product_serivice";
+import {
+  fetchProducts,
+  productFilters,
+} from "../component/Products/service/product_serivice";
 
 interface Image {
   image: string;
@@ -21,20 +24,22 @@ export interface Product {
     name: string;
   };
 }
-export const useProducts = () => {
+export const useProducts = (filter: productFilters) => {
   const [error, setErrors] = useState();
   const [products, setProducts] = useState<Product[]>([]);
   useEffect(() => {
-    const { res, cancel } = fetchProducts();
+    const { res, cancel } = fetchProducts(filter);
     res
       .then((data) => {
+        console.log(data);
         setProducts(data.data);
       })
       .catch((err) => {
-        setErrors(err.response.data);
+        if (err.response) {
+          console.log(err.response.data);
+        }
       });
-
     return () => cancel();
-  }, []);
+  }, [filter]);
   return { products, error };
 };
