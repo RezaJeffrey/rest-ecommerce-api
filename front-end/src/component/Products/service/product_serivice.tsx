@@ -1,16 +1,17 @@
 import axiosInstance from "../../../api/axiosInstance";
 import { Product } from "../../../hooks/useProducts";
-import Brands from "../../Sidebar/items/Brands/Brands";
 
 export interface productFilters {
   categories: string[];
   brands: string[];
+  shops: string[];
 }
 
-const fetchProducts = ({ categories, brands }: productFilters) => {
+const fetchProducts = ({ categories, brands, shops }: productFilters) => {
   const paramObj = {
     categories: categories.join(", "),
     brands: brands.join(", "),
+    shops: shops.join(", "),
   };
   const params = new URLSearchParams(paramObj);
   const controller = new AbortController();

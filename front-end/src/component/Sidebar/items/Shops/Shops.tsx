@@ -10,17 +10,17 @@ import {
   chakraComponents,
   useChakraSelectProps,
 } from "chakra-react-select";
+import { useShop } from "../../../../hooks/useShops";
 
-export interface BrandOptions extends OptionBase {
+export interface ShopOptions extends OptionBase {
   value: string;
   label: string;
-  sku: string;
 }
 
 const customComponents: SelectComponentsConfig<
-  BrandOptions,
+  ShopOptions,
   true,
-  GroupBase<BrandOptions>
+  GroupBase<ShopOptions>
 > = {
   Option: ({ children, ...props }) => (
     <chakraComponents.Option {...props}>{children}</chakraComponents.Option>
@@ -33,36 +33,35 @@ const customComponents: SelectComponentsConfig<
 };
 
 interface Prob {
-  handleBrand: (data: MultiValue<BrandOptions>) => void;
+  handleShop: (data: MultiValue<ShopOptions>) => void;
 }
 
-function Brands({ handleBrand }: Prob) {
-  const { brands, error } = useBrands();
-  const brandOptions: BrandOptions[] = [];
-  brands?.map((brand) =>
-    brandOptions.push({
-      value: brand.name,
-      label: brand.name,
-      sku: brand.sku,
-    })
-  );
+function Shops({ handleShop }: Prob) {
+  const { shops, errorMessage } = useShop();
+  const shopOtions: ShopOptions[] = [];
+  shops.map((shop) => {
+    shopOtions.push({
+      value: shop.sku,
+      label: shop.name,
+    });
+  });
   const selectProbs = useChakraSelectProps({
     isMulti: true,
-    name: "brands",
-    options: brandOptions,
-    placeholder: "Select Brands...",
+    name: "shops",
+    options: shopOtions,
+    placeholder: "Select Shops...",
     components: customComponents,
     onChange(newValue) {
-      handleBrand(newValue);
+      handleShop(newValue);
     },
   });
   return (
     <>
-      {error && <Text>{error}</Text>}
+      {errorMessage && <Text>{errorMessage}</Text>}
       <Container mb={16}>
         <FormControl p={4}>
           <Text fontFamily="serif" fontSize="4xl">
-            Brands
+            Shops
           </Text>
           <Select {...selectProbs} />
         </FormControl>
@@ -71,4 +70,4 @@ function Brands({ handleBrand }: Prob) {
   );
 }
 
-export default Brands;
+export default Shops;

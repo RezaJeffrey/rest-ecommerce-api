@@ -15,7 +15,7 @@ class ShopSerializer(serializers.ModelSerializer):
         model = Shop
         fields = [
             'name', 'address',
-            'province'
+            'province', "sku"
         ]
 
 

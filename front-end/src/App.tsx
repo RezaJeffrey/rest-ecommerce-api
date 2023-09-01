@@ -6,10 +6,12 @@ import { useState } from "react";
 import { categoryEventData } from "./component/NestedList/NestedList";
 import { MultiValue } from "react-select";
 import { BrandOptions } from "./component/Sidebar/items/Brands/Brands";
+import { ShopOptions } from "./component/Sidebar/items/Shops/Shops";
 
 function App() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [selectedShops, setSelectedShops] = useState<string[]>([]);
   const handleCategory = (e: categoryEventData) => {
     if (e.isChecked) {
       setSelectedCategories([...selectedCategories, e.sku]);
@@ -19,6 +21,9 @@ function App() {
   };
   const handleBrand = (e: MultiValue<BrandOptions>) => {
     setSelectedBrands(e.map((brand) => brand.sku));
+  };
+  const handleShop = (e: MultiValue<ShopOptions>) => {
+    setSelectedShops(e.map((shop) => shop.value));
   };
   return (
     <>
@@ -36,6 +41,7 @@ function App() {
             <Sidebar
               handleCategory={(e: categoryEventData) => handleCategory(e)}
               handleBrand={(e: MultiValue<BrandOptions>) => handleBrand(e)}
+              handleShop={(e: MultiValue<ShopOptions>) => handleShop(e)}
             />
           </GridItem>
         </Show>
@@ -43,6 +49,7 @@ function App() {
           <ProductsMain
             categories={selectedCategories}
             brands={selectedBrands}
+            shops={selectedShops}
           />
         </GridItem>
       </Grid>

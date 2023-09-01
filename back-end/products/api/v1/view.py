@@ -25,23 +25,30 @@ class ProductViewSet(ModelViewSet):
     def get_queryset(self, *args, **kwargs):
         url = urlparse(self.request.get_full_path())
         queries = parse_qs(url.query)
-        params = parse_qs(queries["params"][0])
+        try:
+            params = parse_qs(queries["params"][0])
+        except:
+            return Product.objects.all()
         category_param = params.get("categories")
         price_param = params.get("prices")
         brand_param = params.get("brands")
+        shop_param = params.get("shops")
         categories_ToBe_filtered = []
         prices_ToBe_filtered = []
         brands_ToBe_filtered = []
+        shops_ToBe_filtered = []
         if category_param:
             categories_ToBe_filtered = category_param[0].split(", ")
         if price_param:
             prices_ToBe_filtered = price_param[0].split(", ")
         if brand_param:
-            brands_ToBe_filtered = brand_param[0].split(", ") 
-        if not categories_ToBe_filtered and not brands_ToBe_filtered:
+            brands_ToBe_filtered = brand_param[0].split(", ")
+        if shop_param:
+            shops_ToBe_filtered = shop_param[0].split(", ") 
+        if not categories_ToBe_filtered and not brands_ToBe_filtered and not shops_ToBe_filtered:
             queryset = Product.objects.all()
         else:
-            queryset = Product.objects.filter(category__sku__in = categories_ToBe_filtered, brand__sku__in = brands_ToBe_filtered)
+            queryset = Product.objects.filter(category__sku__in = categories_ToBe_filtered, brand__sku__in = brands_ToBe_filtered, shop__sku__in = shops_ToBe_filtered)
         return queryset
 
     def get_serializer_class(self):

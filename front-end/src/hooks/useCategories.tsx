@@ -10,7 +10,7 @@ export interface Category {
 }
 
 export const useCategories = () => {
-  const [error, setError] = useState();
+  const [error, setError] = useState<string>();
   const [categories, setCategories] = useState<Category[]>([]);
   useEffect(() => {
     const { res, cancel } = fetchSideBarItems<Category>(
@@ -18,10 +18,12 @@ export const useCategories = () => {
     );
     res
       .then((response) => {
+        setError("");
         setCategories(response.data);
       })
       .catch((err) => {
         setError(err.response.data);
+        setCategories([]);
       });
     return () => cancel();
   }, []);
