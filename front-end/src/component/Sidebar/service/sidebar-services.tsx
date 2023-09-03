@@ -1,4 +1,3 @@
-import { useState } from "react";
 import axiosInstance from "../../../api/axiosInstance";
 
 interface MaxPrice {
