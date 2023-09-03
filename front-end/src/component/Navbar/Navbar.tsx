@@ -30,6 +30,7 @@ function Navbar() {
             </Button>
           </HStack>
         )}
+        <Button onClick={() => navigate("/", { replace: true })}>Home</Button>
         <ToggleColorMode />
       </HStack>
     </HStack>

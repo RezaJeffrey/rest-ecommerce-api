@@ -57,7 +57,7 @@ function Signup() {
     res
       .then((data) => {
         console.log(data);
-        navigate("users/login/", { replace: true });
+        navigate("/users/login/", { replace: true });
       })
       .catch((err) => {
         console.log(err.response?.data);

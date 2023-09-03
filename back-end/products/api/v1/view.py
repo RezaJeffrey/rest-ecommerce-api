@@ -1,8 +1,17 @@
+from urllib.parse import urlparse
+from urllib.parse import parse_qs
+
+from products.models import Product
+from productpacks.models import ProductPack
+from extra_fields.models import ExtraFieldValue
+from category.models import Category
+from brands.models import Brand
+from shops.models import Shop
+
 from rest_framework.viewsets import ModelViewSet
+from rest_framework.decorators import action
 from .serializer import ProductSerializer, ProductCreateSerializer, ExtraFieldSerializer
 from rest_framework import permissions
-from products.models import Product
-from extra_fields.models import ExtraFieldValue
 from comments.api.v1.serializer import CreateCommentSerializer, CommentSerializer
 from rest_framework import status, generics
 from rest_framework.response import Response
@@ -15,11 +24,41 @@ from core.permissions import IsSeller
 
 # TODO [BUG] drf-yasg occurs to bug cause of this viewset and most probably the serializer
 class ProductViewSet(ModelViewSet):
-
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
     lookup_field = 'sku'
     lookup_url_kwarg = 'sku'
+
+    def get_queryset(self, *args, **kwargs):
+        url = urlparse(self.request.get_full_path())
+        queries = parse_qs(url.query)
+        try:
+            params = parse_qs(queries["params"][0])
+        except:
+            return Product.objects.all()
+        category_param = params.get("categories")
+        price_param = params.get("price")
+        brand_param = params.get("brands")
+        shop_param = params.get("shops")
+        categories_ToBe_filtered = Category.objects.all().values_list("sku", flat=True)
+        prices_ToBe_filtered = [0, ProductPack.objects.order_by("-price").first().price]
+        brands_ToBe_filtered = Brand.objects.all().values_list("sku", flat=True)
+        shops_ToBe_filtered = Shop.objects.all().values_list("sku", flat=True)
+        if category_param:
+            categories_ToBe_filtered = category_param[0].split(", ")
+        if price_param:
+            prices_ToBe_filtered = price_param[0].split(", ")
+        if brand_param:
+            brands_ToBe_filtered = brand_param[0].split(", ")
+        if shop_param:
+            shops_ToBe_filtered = shop_param[0].split(", ") 
+        queryset = Product.objects.prefetch_related("paks").filter(
+            category__sku__in = categories_ToBe_filtered, 
+            brand__sku__in = brands_ToBe_filtered, 
+            shop__sku__in = shops_ToBe_filtered, 
+            paks__price__gte = prices_ToBe_filtered[0],
+            paks__price__lte = prices_ToBe_filtered[1]
+        ).distinct()
+        return queryset
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -28,8 +67,9 @@ class ProductViewSet(ModelViewSet):
             serializer_class = ProductSerializer
         return serializer_class
 
+
     def get_permissions(self):
-        if self.action == 'list' or self.action == 'retrieve':
+        if self.action == 'list' or self.action == 'retrieve' or self.action == 'get_maximum_price':
             permission_class = []
         else:
             permission_class = [permissions.IsAuthenticated]
@@ -49,6 +89,18 @@ class ProductViewSet(ModelViewSet):
             data=response,
             status=code
         )
+    
+    @action(detail=False, methods=['GET'])
+    def get_maximum_price(self, request):
+        queryset = self.get_queryset()
+        maximum_price = ProductPack.objects.filter(product__in = queryset).order_by("-price").first().price
+        return Response(
+            data = {
+                "maximum_price": maximum_price
+            },
+            status=status.HTTP_200_OK
+        )
+
 
 class AddProductImageView(generics.CreateAPIView):
     permission_classes = [IsSeller]

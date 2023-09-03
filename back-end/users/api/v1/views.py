@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 # Third-party package imports
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from rest_framework.response import Response
 # .files import
@@ -13,6 +13,8 @@ from django.contrib.auth import authenticate
 User = get_user_model()
 
 class UserRegisterView(generics.CreateAPIView):
+    permission_classes = [AllowAny,]
+    authentication_classes = ([])
     serializer_class = UserRegisterationSerializer
     def create(self, request, *args, **kwargs):
         payload = request.data

@@ -5,12 +5,12 @@ from rest_framework import serializers
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['name', 'image', 'child']
+        fields = ['name', 'image', 'child', 'sku']
     # TODO [BUG] when using drf-yasg
-    # def get_fields(self):
-    #     fields = super(CategorySerializer, self).get_fields()
-    #     fields['child'] = CategorySerializer(many=True)
-    #     return fields
+    def get_fields(self):
+        fields = super(CategorySerializer, self).get_fields()
+        fields['child'] = CategorySerializer(many=True)
+        return fields
 
 
 class CategoryCreateSerializer(serializers.ModelSerializer):
