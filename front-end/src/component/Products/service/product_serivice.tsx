@@ -5,13 +5,20 @@ export interface productFilters {
   categories: string[];
   brands: string[];
   shops: string[];
+  price: number[];
 }
 
-const fetchProducts = ({ categories, brands, shops }: productFilters) => {
+const fetchProducts = ({
+  categories,
+  brands,
+  shops,
+  price,
+}: productFilters) => {
   const paramObj = {
     categories: categories.join(", "),
     brands: brands.join(", "),
     shops: shops.join(", "),
+    price: price.join(", "),
   };
   const params = new URLSearchParams(paramObj);
   const controller = new AbortController();

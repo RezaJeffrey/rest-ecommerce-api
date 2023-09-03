@@ -12,6 +12,7 @@ function App() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedShops, setSelectedShops] = useState<string[]>([]);
+  const [selectedPriceRange, setSelectedPriceRange] = useState<number[]>([]);
   const handleCategory = (e: categoryEventData) => {
     if (e.isChecked) {
       setSelectedCategories([...selectedCategories, e.sku]);
@@ -24,6 +25,9 @@ function App() {
   };
   const handleShop = (e: MultiValue<ShopOptions>) => {
     setSelectedShops(e.map((shop) => shop.value));
+  };
+  const handlePrice = (e: number[]) => {
+    setSelectedPriceRange([e[0], e[1]]);
   };
   return (
     <>
@@ -42,6 +46,7 @@ function App() {
               handleCategory={(e: categoryEventData) => handleCategory(e)}
               handleBrand={(e: MultiValue<BrandOptions>) => handleBrand(e)}
               handleShop={(e: MultiValue<ShopOptions>) => handleShop(e)}
+              handlePrice={(e: number[]) => handlePrice(e)}
             />
           </GridItem>
         </Show>
@@ -50,6 +55,7 @@ function App() {
             categories={selectedCategories}
             brands={selectedBrands}
             shops={selectedShops}
+            price={selectedPriceRange}
           />
         </GridItem>
       </Grid>
