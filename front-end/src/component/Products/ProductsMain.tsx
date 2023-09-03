@@ -9,8 +9,8 @@ function ProductsMain(filters: productFilters) {
     <>
       {error && <Text>{error}</Text>}
       <SimpleGrid columns={{ lg: 3, sm: 2, base: 1 }} spacing={10}>
-        {products.map((product) => (
-          <ProductCard result={product} key={product.id} />
+        {products.map((product, index) => (
+          <ProductCard result={product} key={index + 1} />
         ))}
       </SimpleGrid>
     </>

@@ -1,13 +1,17 @@
 from urllib.parse import urlparse
 from urllib.parse import parse_qs
 
+from products.models import Product
+from productpacks.models import ProductPack
+from extra_fields.models import ExtraFieldValue
+from category.models import Category
+from brands.models import Brand
+from shops.models import Shop
+
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import action
 from .serializer import ProductSerializer, ProductCreateSerializer, ExtraFieldSerializer
 from rest_framework import permissions
-from products.models import Product
-from productpacks.models import ProductPack
-from extra_fields.models import ExtraFieldValue
 from comments.api.v1.serializer import CreateCommentSerializer, CommentSerializer
 from rest_framework import status, generics
 from rest_framework.response import Response
@@ -35,10 +39,10 @@ class ProductViewSet(ModelViewSet):
         price_param = params.get("price")
         brand_param = params.get("brands")
         shop_param = params.get("shops")
-        categories_ToBe_filtered = []
-        prices_ToBe_filtered = [0, 0]
-        brands_ToBe_filtered = []
-        shops_ToBe_filtered = []
+        categories_ToBe_filtered = Category.objects.all().values_list("sku", flat=True)
+        prices_ToBe_filtered = [0, ProductPack.objects.order_by("-price").first().price]
+        brands_ToBe_filtered = Brand.objects.all().values_list("sku", flat=True)
+        shops_ToBe_filtered = Shop.objects.all().values_list("sku", flat=True)
         if category_param:
             categories_ToBe_filtered = category_param[0].split(", ")
         if price_param:
@@ -47,16 +51,13 @@ class ProductViewSet(ModelViewSet):
             brands_ToBe_filtered = brand_param[0].split(", ")
         if shop_param:
             shops_ToBe_filtered = shop_param[0].split(", ") 
-        if not categories_ToBe_filtered and not brands_ToBe_filtered and not shops_ToBe_filtered and prices_ToBe_filtered == [0, 0]:
-            queryset = Product.objects.all()
-        else:
-            queryset = Product.objects.prefetch_related("paks").filter(
-                category__sku__in = categories_ToBe_filtered, 
-                brand__sku__in = brands_ToBe_filtered, 
-                shop__sku__in = shops_ToBe_filtered, 
-                paks__price__gte = prices_ToBe_filtered[0],
-                paks__price__lte = prices_ToBe_filtered[1]
-            )
+        queryset = Product.objects.prefetch_related("paks").filter(
+            category__sku__in = categories_ToBe_filtered, 
+            brand__sku__in = brands_ToBe_filtered, 
+            shop__sku__in = shops_ToBe_filtered, 
+            paks__price__gte = prices_ToBe_filtered[0],
+            paks__price__lte = prices_ToBe_filtered[1]
+        ).distinct()
         return queryset
 
     def get_serializer_class(self):
