@@ -46,7 +46,9 @@ class ProductViewSet(ModelViewSet):
         if category_param:
             categories_ToBe_filtered = category_param[0].split(", ")
         if price_param:
-            prices_ToBe_filtered = price_param[0].split(", ")
+            price_arr =  price_param[0].split(", ")
+            if price_arr != ['0', '0']:
+                prices_ToBe_filtered = price_arr
         if brand_param:
             brands_ToBe_filtered = brand_param[0].split(", ")
         if shop_param:
