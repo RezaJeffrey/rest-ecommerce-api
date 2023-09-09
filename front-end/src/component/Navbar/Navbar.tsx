@@ -20,13 +20,11 @@ function Navbar() {
         borderColor={useColorModeValue("gray.900", "whiteAlpha.900")}
         align={"center"}
       >
-        <Flex flex={1} ml={-2} display={"flex"}>
-          <Logo />
-        </Flex>
-        <Flex flex={1} justify={"start"} mr="400">
+        <Logo />
+        <Flex flex={1} justify={"center"}>
           <SearchBox />
         </Flex>
-        <Flex ml="400">
+        <Flex>
           <NavButtons />
         </Flex>
       </Flex>
