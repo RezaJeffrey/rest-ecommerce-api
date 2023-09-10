@@ -9,9 +9,18 @@ function NavButtons() {
     <>
       <HStack>
         {localStorage.getItem(ACCESS_TOKEN) ? (
-          <Button onClick={() => navigate("/users/logout/", { replace: true })}>
-            Logout
-          </Button>
+          <HStack>
+            <Button
+              onClick={() => navigate("/users/logout/", { replace: true })}
+            >
+              Logout
+            </Button>
+            <Button
+              onClick={() => navigate("/users/profile/", { replace: true })}
+            >
+              Profile
+            </Button>
+          </HStack>
         ) : (
           <HStack>
             <Button
