@@ -7,7 +7,6 @@ import {
   VStack,
   List,
   ListItem,
-  Center,
   Box,
 } from "@chakra-ui/react";
 import { ChangeEvent, useRef, useState } from "react";

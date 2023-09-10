@@ -6,7 +6,11 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import status
 from rest_framework.response import Response
 # .files import
-from users.api.v1.serializers import (MyTokenObtainPairSerializer, ChangePasswordSerializer, UserProfileSerializer, UserRegisterationSerializer)
+from users.api.v1.serializers import (
+    MyTokenObtainPairSerializer, ChangePasswordSerializer, 
+    UserProfileSerializer, UserRegisterationSerializer,
+    UserProfileImageSerializer
+)
 from django.contrib.auth import authenticate
 
 # user
@@ -57,6 +61,31 @@ class UserProfileView(generics.RetrieveAPIView):
             "profile": serializer.data
         }
         code = status.HTTP_200_OK
+        return Response(
+            data=response,
+            status=code
+        )
+
+class AddUserProfileImageView(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserProfileImageSerializer
+
+    def create(self, request, *args, **kwargs):
+        payload = request.data
+        serializer = self.serializer_class(data=payload)
+        if serializer.is_valid():
+            serializer.create(serializer.validated_data)
+            response = {
+                "message": "image added successfully!",
+                "detail": serializer.data
+            }
+            code = status.HTTP_201_CREATED
+        else:
+            response = {
+                "message": "something went wrong!",
+                "error": serializer.errors
+            }
+            code = status.HTTP_403_FORBIDDEN
         return Response(
             data=response,
             status=code

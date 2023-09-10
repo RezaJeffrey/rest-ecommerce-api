@@ -2,6 +2,7 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from users.models import UserProfileImage
 User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
@@ -39,14 +40,28 @@ class UserRegisterationSerializer(serializers.ModelSerializer):
         )
         user.is_active = True
         return user
+    
+class UserProfileImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfileImage
+        fields = [
+            "user", "image",
+            "alt_text"
+        ]
+    
+    def create(self, validated_data):
+        user_profile_image = UserProfileImage(**validated_data)
+        user_profile_image.save()
+        return user_profile_image
 
 class UserProfileSerializer(serializers.ModelSerializer):
+    images = UserProfileImageSerializer(many=True)
     class Meta:
         model = User
         fields = [
-            "username",
-            "first_name",
-            "last_name"
+            "username", "first_name", 
+            "last_name", "role", 
+            "email_verified", "images"
         ]
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
