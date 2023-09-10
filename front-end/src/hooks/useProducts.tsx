@@ -24,22 +24,25 @@ export interface Product {
     name: string;
   };
 }
-export const useProducts = (filter: productFilters) => {
+export const useProducts = (filter: productFilters, deps?: any[]) => {
   const [error, setErrors] = useState();
   const [products, setProducts] = useState<Product[]>([]);
-  useEffect(() => {
-    const { res, cancel } = fetchProducts(filter);
-    res
-      .then((data) => {
-        setProducts(data.data);
-      })
-      .catch((err) => {
-        if (err.response) {
-          console.log(err.response.data);
-          setErrors(err.response.data);
-        }
-      });
-    return () => cancel();
-  }, [filter]);
+  useEffect(
+    () => {
+      const { res, cancel } = fetchProducts(filter);
+      res
+        .then((data) => {
+          setProducts(data.data);
+        })
+        .catch((err) => {
+          if (err.response) {
+            console.log(err.response.data);
+            setErrors(err.response.data);
+          }
+        });
+      return () => cancel();
+    },
+    deps ? [...deps] : [filter]
+  );
   return { products, error };
 };

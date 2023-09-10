@@ -2,19 +2,22 @@ import axiosInstance from "../../../api/axiosInstance";
 import { Product } from "../../../hooks/useProducts";
 
 export interface productFilters {
-  categories: string[];
-  brands: string[];
-  shops: string[];
-  price: number[];
+  name?: string;
+  categories?: string[];
+  brands?: string[];
+  shops?: string[];
+  price?: number[];
 }
 
 const fetchProducts = ({
-  categories,
-  brands,
-  shops,
-  price,
+  categories = [],
+  brands = [],
+  shops = [],
+  price = [],
+  name = "",
 }: productFilters) => {
   const paramObj = {
+    name: name,
     categories: categories.join(", "),
     brands: brands.join(", "),
     shops: shops.join(", "),

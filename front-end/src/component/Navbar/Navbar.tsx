@@ -1,39 +1,34 @@
-import { Box, Button, HStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  HStack,
+  useColorMode,
+  useColorModeValue,
+} from "@chakra-ui/react";
 import Logo from "./items/Logo";
-import ToggleColorMode from "./items/ToggleColorMode";
-import { useNavigate } from "react-router-dom";
-import { ACCESS_TOKEN } from "../../api/axiosInstance";
+import SearchBox from "./items/SearchBox";
+import NavButtons from "./items/NavBUttons";
 
 function Navbar() {
-  const navigate = useNavigate();
   return (
-    <HStack justifyContent="space-between" padding="10px">
-      <Box>
+    <Box>
+      <Flex
+        mb="5"
+        borderBottom={2}
+        borderStyle={"solid"}
+        borderColor={useColorModeValue("gray.900", "whiteAlpha.900")}
+        align={"center"}
+      >
         <Logo />
-      </Box>
-      <HStack>
-        {localStorage.getItem(ACCESS_TOKEN) ? (
-          <Button onClick={() => navigate("/users/logout/", { replace: true })}>
-            Logout
-          </Button>
-        ) : (
-          <HStack>
-            <Button
-              onClick={() => navigate("/users/login/", { replace: true })}
-            >
-              Login
-            </Button>
-            <Button
-              onClick={() => navigate("/users/signup/", { replace: true })}
-            >
-              Signup
-            </Button>
-          </HStack>
-        )}
-        <Button onClick={() => navigate("/", { replace: true })}>Home</Button>
-        <ToggleColorMode />
-      </HStack>
-    </HStack>
+        <Flex flex={1} justify={"center"}>
+          <SearchBox />
+        </Flex>
+        <Flex>
+          <NavButtons />
+        </Flex>
+      </Flex>
+    </Box>
   );
 }
 
