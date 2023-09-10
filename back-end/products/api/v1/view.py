@@ -35,6 +35,7 @@ class ProductViewSet(ModelViewSet):
             params = parse_qs(queries["params"][0])
         except:
             return Product.objects.all()
+        name_param = params.get("name")
         category_param = params.get("categories")
         price_param = params.get("price")
         brand_param = params.get("brands")
@@ -43,6 +44,7 @@ class ProductViewSet(ModelViewSet):
         prices_ToBe_filtered = [0, ProductPack.objects.order_by("-price").first().price]
         brands_ToBe_filtered = Brand.objects.all().values_list("sku", flat=True)
         shops_ToBe_filtered = Shop.objects.all().values_list("sku", flat=True)
+        name_ToBe_filtered = ""
         if category_param:
             categories_ToBe_filtered = category_param[0].split(", ")
         if price_param:
@@ -53,7 +55,10 @@ class ProductViewSet(ModelViewSet):
             brands_ToBe_filtered = brand_param[0].split(", ")
         if shop_param:
             shops_ToBe_filtered = shop_param[0].split(", ") 
+        if name_param:
+            name_ToBe_filtered = name_param[0]
         queryset = Product.objects.prefetch_related("paks").filter(
+            name__contains = name_ToBe_filtered,
             category__sku__in = categories_ToBe_filtered, 
             brand__sku__in = brands_ToBe_filtered, 
             shop__sku__in = shops_ToBe_filtered, 

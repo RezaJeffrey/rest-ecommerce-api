@@ -3,23 +3,30 @@ import {
   InputGroup,
   InputLeftElement,
   Input,
-  Text,
   useOutsideClick,
   VStack,
   List,
   ListItem,
+  Center,
+  Box,
 } from "@chakra-ui/react";
-import { MutableRefObject, useRef, useState } from "react";
-
-const options = [{ label: "hello" }, { label: "world" }];
+import { ChangeEvent, useRef, useState } from "react";
+import { useProducts } from "../../../hooks/useProducts";
 
 function SearchBox() {
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [isListOpen, setIsListOpen] = useState(false);
+  const [name, setName] = useState("");
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setName(e.target.value);
+  };
   useOutsideClick({
     ref: ref,
     handler: () => setIsListOpen(false),
   });
+  const { products } = useProducts({ name: name }, [name]);
+
   return (
     <>
       <VStack>
@@ -33,14 +40,20 @@ function SearchBox() {
           <InputLeftElement>
             <SearchIcon />
           </InputLeftElement>
-          <Input placeholder="Search Box" borderRadius="16px" />
+          <Input
+            placeholder="Search Box"
+            borderRadius="16px"
+            onChange={(e) => handleChange(e)}
+          />
         </InputGroup>
         {isListOpen && (
-          <List spacing={3}>
-            {options.map((option, idx) => (
-              <ListItem key={idx}>{option.label}</ListItem>
-            ))}
-          </List>
+          <Box display="flex" justifyContent="center" width="100%" ref={ref}>
+            <List spacing={3}>
+              {products.map((product, idx) => (
+                <ListItem key={idx}>{product.name}</ListItem>
+              ))}
+            </List>
+          </Box>
         )}
       </VStack>
     </>

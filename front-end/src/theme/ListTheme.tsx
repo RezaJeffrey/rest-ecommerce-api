@@ -7,14 +7,25 @@ const { definePartsStyle, defineMultiStyleConfig } =
 
 const baseStyle = definePartsStyle((props) => ({
   container: {
+    p: 10,
+    width: "200%",
+    border: "1px",
+    borderRadius: "20px",
     listStylePos: "inside", // change listStylePos to inside
     boxShadow: "md", // change boxShadow to md
+    mb: "2",
   },
   item: {
     p: 2, // set padding to 2
+    border: "1px",
+    borderRadius: "20px",
     "&::marker": {
       // change color for marker
       color: mode("green.500", "green.200")(props),
+    },
+    _hover: {
+      color: mode("red.500", "red.300")(props),
+      cursor: "pointer",
     },
   },
   icon: {
